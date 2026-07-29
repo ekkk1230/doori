@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.1.197",
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.27.0",
     "next": "16.2.11",
     "react": "19.2.4",

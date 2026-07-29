@@ -1,11 +1,12 @@
 'use client';
 
-import React, { ReactNode, useState } from "react";
-import {
-    Banknote, CalendarDays, Check, ChevronRight, MapPin, Sparkles, Users, Wand2,
-} from "lucide-react";
+import React, { useRef, useState } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { Banknote, CalendarDays, Check, ChevronRight, MapPin, Sparkles, Users, Wand2 } from "lucide-react";
 import { UserInput } from "@/types/doori";
-import { calculateWeddingPeriod } from "@/utils/date";
+import { useDooriStore } from "@/store/useDooriStore";
+import { useUiStore } from "@/store/useUiStore";
 
 interface OnboardingProps {
     onComplete?: () => void;
@@ -34,14 +35,39 @@ const BUDGET_TIER_OPTIONS: { value: UserInput["budgetTier"]; icon: typeof Bankno
 ];
 
 export default function Onboarding({ onComplete }: OnboardingProps) {
-    const [weddingDate, setWeddingDate] = useState("");
-    const [budgetInManwon, setBudgetInManwon] = useState("");
-    const [location, setLocation] = useState("");
-    const [budgetTier, setBudgetTier] = useState<UserInput["budgetTier"]>("표준");
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const { weddingDate, budgetInManwon, location, guestCount, budgetTier,
+            setWeddingDate, setBudgetInManwon, setLocation, setGuestCount, setBudgetTier   
+    } = useDooriStore();
+    const { setActiveTab } = useUiStore();
+    
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [period, setPeriod] = useState<string | null>(null);
     const [inputPeriod, setInputPeriod] = useState<boolean>(false);
-    const [guestCount, setGuestCount] = useState<number | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    useGSAP(() => {
+        if (!containerRef.current) return;
+        const items = gsap.utils.toArray<HTMLElement>(".form-item", containerRef.current);
+
+        gsap.set(containerRef.current, { opacity: 0, y: 30 });
+        gsap.set(items, { opacity: 0, y: 20 });
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        tl.to(containerRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+        })
+        .to(items, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08, 
+        }, "-=0.3");
+
+    }, { scope: containerRef });
 
     const handlePeriodClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         const selectedValue = e.currentTarget.value;
@@ -63,19 +89,46 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         }
     };
 
+    const handleActivePlan = () => {
+        if (!weddingDate) {
+            setErrorMessage("준비 기간 (예식 예정 날짜)를 선택해주세요.");
+            return;
+        }
+        if (!budgetInManwon) {
+            setErrorMessage("예식 예정 금액을 입력해주세요.");
+            return;
+        }
+        if (!location) {
+            setErrorMessage("예식 예정 장소를 입력해주세요.")
+            return;
+        }
+        if (!guestCount) {
+            setErrorMessage("예상 보증 인원을 입력해주세요.")
+            return;
+        }
+        if (!budgetTier) {
+            setErrorMessage("희망 예산 등급을 입력해주세요.")
+            return;
+        }
+
+        setActiveTab("planTab");
+    };
+
     return (
         <div className="flex min-h-screen flex-col justify-center bg-rose-50 px-6 py-12">
-            <div className="mx-auto w-full rounded-[1.5rem] border border-white/60 bg-white/80 p-8 shadow-card backdrop-blur-xl">
-                <h1 className="tit text-[2.4rem] tracking-[-.04rem] font-bold text-gray-800">
-                    두 분의 웨딩,<br />
-                    <span className="text-rose-400">AI가 설계해 드릴게요.</span>
-                </h1>
-                <p className="mt-[.8rem] text-[1.5rem] font-semibold text-gray-500">
-                    기본 정보를 입력하면 AI가 맞춤 플랜을 만들어드려요.
-                </p>
+            <div ref={containerRef} className="mx-auto w-full rounded-[1.5rem] border border-white/60 bg-white/80 p-8 shadow-card backdrop-blur-xl">
+                <div className="form-item">
+                    <h1 className="tit text-[2.4rem] tracking-[-.04rem] font-bold text-gray-800">
+                        두 분의 웨딩,<br />
+                        <span className="text-rose-400">AI가 설계해 드릴게요.</span>
+                    </h1>
+                    <p className="mt-[.8rem] text-[1.5rem] font-semibold text-gray-500">
+                        기본 정보를 입력하면 AI가 맞춤 플랜을 만들어드려요.
+                    </p>
+                </div>
 
                 <div className="mt-[3rem] flex flex-col gap-[2rem]">
-                    <div>
+                    <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <CalendarDays className="h-[1.8rem] w-[1.8rem] text-rose-400" />
                             준비 기간 (예식 예정 날짜)
@@ -119,7 +172,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         )}
                     </div>
 
-                    <div>
+                    <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <Banknote className="h-[1.8rem] w-[1.8rem] text-rose-400" />
                             예식 예정 금액 (만원)
@@ -135,7 +188,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         />
                     </div>
 
-                    <div>
+                    <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <MapPin className="h-[1.8rem] w-[1.8rem] text-rose-400" />
                             예식 예정 장소
@@ -149,7 +202,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         />
                     </div>
 
-                    <div>
+                    <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <Users className="h-[1.8rem] w-[1.8rem] text-rose-400" />
                             예상 보증인원
@@ -175,7 +228,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="form-item">
                         <span className="text-[1.5rem] font-semibold text-gray-700">
                             희망 예산 등급
                         </span>
@@ -213,7 +266,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
                     <button
                         type="button"
-                        className="mt-[1rem] flex items-center justify-center gap-[.6rem] rounded-[1rem] bg-rose-400 px-[1.6rem] py-[1.4rem] text-[1.6rem] font-bold text-white transition-colors hover:bg-rose-500"
+                        className="form-item mt-[1rem] flex items-center justify-center gap-[.6rem] rounded-[1rem] bg-rose-400 px-[1.6rem] py-[1.4rem] text-[1.6rem] font-bold text-white transition-colors hover:bg-rose-500"
+                        onClick={handleActivePlan}
                     >
                         AI 웨딩 플랜 시작하기
                         <ChevronRight className="h-[1.8rem] w-[1.8rem]" />
