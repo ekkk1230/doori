@@ -4,8 +4,6 @@ import React, { ReactNode, useState } from "react";
 import {
     Banknote, CalendarDays, Check, ChevronRight, MapPin, Sparkles, Users, Wand2,
 } from "lucide-react";
-
-import { useDooriStore } from "@/store/useDooriStore";
 import { UserInput } from "@/types/doori";
 import { calculateWeddingPeriod } from "@/utils/date";
 
@@ -36,8 +34,6 @@ const BUDGET_TIER_OPTIONS: { value: UserInput["budgetTier"]; icon: typeof Bankno
 ];
 
 export default function Onboarding({ onComplete }: OnboardingProps) {
-    const setUserInput = useDooriStore((state) => state.setUserInput);
-
     const [weddingDate, setWeddingDate] = useState("");
     const [budgetInManwon, setBudgetInManwon] = useState("");
     const [location, setLocation] = useState("");
@@ -65,45 +61,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             const formattedDate = targetDate.toISOString().split("T")[0];
             setWeddingDate(formattedDate);
         }
-    };
-
-    const handleSubmit = () => {
-        if (!weddingDate) {
-            setErrorMessage("예식 예정 날짜를 입력해주세요.");
-            return;
-        }
-
-        const totalBudget = Number(budgetInManwon) * 10000;
-        if (!budgetInManwon || totalBudget <= 0) {
-            setErrorMessage("예정 금액을 올바르게 입력해주세요.");
-            return;
-        }
-
-        if (!location.trim()) {
-            setErrorMessage("예식 예정 장소를 입력해주세요.");
-            return;
-        }
-
-        if (!guestCount) {
-            setErrorMessage("예상 보증인원을 선택해주세요.");
-            return;
-        }
-
-        setErrorMessage(null);
-
-        const { periodMonths } = calculateWeddingPeriod(weddingDate);
-
-        const nextUserInput: UserInput = {
-            weddingDate,
-            periodMonths,
-            budgetTier,
-            totalBudget,
-            location: location.trim(),
-            guestCount,
-        };
-
-        setUserInput(nextUserInput);
-        onComplete?.();
     };
 
     return (
@@ -256,7 +213,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
                     <button
                         type="button"
-                        onClick={handleSubmit}
                         className="mt-[1rem] flex items-center justify-center gap-[.6rem] rounded-[1rem] bg-rose-400 px-[1.6rem] py-[1.4rem] text-[1.6rem] font-bold text-white transition-colors hover:bg-rose-500"
                     >
                         AI 웨딩 플랜 시작하기
