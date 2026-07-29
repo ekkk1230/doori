@@ -13,6 +13,7 @@ export const MOCK_USER_INPUT: UserInput = {
 	budgetTier: "표준",
 	totalBudget: 35000000,
 	location: "서울 강남구",
+	guestCount: 220
 };
 
 // 2. 유저 견적 입력에 대한 AI 비교 진단 예시

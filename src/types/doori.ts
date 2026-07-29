@@ -5,6 +5,7 @@ export interface UserInput {
     budgetTier: '가성비' | '표준' | '초호화';
     totalBudget: number;        // 예: 35000000
     location: string;           // 예: '서울 강남구'
+    guestCount: number;
   }
   
   // 2. 유저가 실제 상담/계약 후 입력하는 견적 타입
@@ -36,7 +37,7 @@ export interface UserInput {
     aiAdvice: string;
   }
   
-  // 5. 🌟 12개월 정석 베이스 + 단기 플랜 대응 체크리스트 타입
+  // 5. 12개월 정석 베이스 + 단기 플랜 대응 체크리스트 타입
   export interface ChecklistItem {
     id: string;
     dDay12m: string;            // 12개월 정석 기준 D-Day (예: 'D-360', 'D-270')

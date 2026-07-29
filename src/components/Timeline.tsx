@@ -7,7 +7,7 @@ import { useState } from "react"
 
 export default function Timeline() {
     const [weddingDate, setWeddingDate] = useState<string>(MOCK_USER_INPUT.weddingDate);
-    console.log(weddingDate)
+    // console.log(weddingDate)
     const [items, setItems] = useState<ChecklistItem[]>(MOCK_TIMELINE_ITEMS);
 
     const { periodMonths, dDayText } = calculateWeddingPeriod(weddingDate);
