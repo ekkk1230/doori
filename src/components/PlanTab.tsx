@@ -1,5 +1,5 @@
 import { useDooriStore } from "@/store/useDooriStore";
-import { CalendarDays, MapPin, Wallet, Sparkles, ChevronRight } from "lucide-react";
+import { CalendarDays, MapPin, Wallet, Sparkles, ChevronRight, UserRound } from "lucide-react";
 import { useRef } from "react";
 import { calculateWeddingPeriod } from "@/utils/date";
 import Link from "next/link";
@@ -23,6 +23,7 @@ export default function PlanTab() {
                             <li className="flex items-center plan-util-item"><CalendarDays className="icon" />예정일 : {weddingDate}</li>
                             <li className="flex items-center plan-util-item"><MapPin className="icon" />장소 : {location}</li>
                             <li className="flex items-center plan-util-item"><Wallet className="icon" />예산 : {budgetInManwon}</li>
+                            <li className="flex items-center plan-util-item"><UserRound className="icon" />보증인원 : {guestCount}</li>
                         </ul>
                         <span className="bg-white text-[#d38021] p-[.4rem_1.2rem] text-[1.4rem] font-semibold rounded-[8rem] block ml-[1rem]">{budgetTier}</span>
                     </div>

@@ -15,4 +15,10 @@ export function calculateWeddingPeriod(weddingDateStr: string) {
         dDayText: diffDays === 0 ? 'D-Day' : diffDays > 0 ? `D-${diffDays}` : `D+${Math.abs(diffDays)}`,
         periodMonths
     }
+};
+
+export const parseDDay = (dDayStr: string): number => {
+    const num = parseInt(dDayStr.replace(/[^0-9]/g, ""), 10);
+
+    return isNaN(num) ? 0 : num;
 }

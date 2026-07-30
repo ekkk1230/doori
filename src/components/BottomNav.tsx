@@ -15,7 +15,7 @@ export default function BottomNav() {
     ]
 
     return (
-        <nav className="flex justify-between p-[1rem] w-[80%] mx-auto">
+        <nav className="flex justify-between p-[1rem] w-full px-[10%] bg-white/50 backdrop-blur-[1rem] border-t-solid border-t-[.1rem] border-t-rose-100/60">
             {navItems.map((item, idx) => {
                 const Icon = item.icon;
                 const isActive = item.href === "/"

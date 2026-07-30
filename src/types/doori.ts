@@ -40,15 +40,18 @@ export interface UserInput {
   // 5. 12개월 정석 베이스 + 단기 플랜 대응 체크리스트 타입
   export interface ChecklistItem {
     id: string;
+    stage?: string;             // 추가: "1단계: 기획 & 웨딩홀" 등의 그룹명
     dDay12m: string;            // 12개월 정석 기준 D-Day (예: 'D-360', 'D-270')
     title: string;              // 작업 명칭 (예: '드레스 샵 투어')
+    description?: string;       // 일정에 대한 기본 설명 및 가이드
     category: '기획' | '웨딩홀' | '스드메' | '예물예복' | '신혼집여행' | '본식준비';
+    isEssential?: boolean;      // 추가: 필수 체크 항목 여부 (기본값 false 또는 true)
     completed: boolean;         // 체크 여부
     aiTip?: string;             // 플래너의 기본 팁
     
     // 정석에서 기간별로 줄이기 위한 옵션 필드
-    skipIfUnderMonths?: number; // 이 개월 수 미만 플랜에서는 자동 생략 (예: 6 입력 시 4, 3개월 플랜에서 스킵)
-    shortPlanNote?: string;     // 단기 플랜 시 보여줄 AI의 대안 가이드 (예: "단기 플랜은 토탈 샵 추천")
+    skipIfUnderMonths?: number; // 이 개월 수 미만 플랜에서는 자동 생략
+    shortPlanNote?: string;     // 단기 플랜 시 보여줄 AI의 대안 가이드
   }
   
   // 6. 카카오맵 주변 업체 타입
