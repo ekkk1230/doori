@@ -1,6 +1,6 @@
-import { ChecklistItem } from "@/types/doori";
+import { Checklist } from "@/types/doori";
 
-export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
+export const DEFAULT_WEDDING_TIMELINE: Checklist.Item[] = [
     // ── [1단계: 기획 & 웨딩홀] ──
     {
         id: "t1",
@@ -11,7 +11,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "기획",
         isEssential: true,
         completed: true,
-        aiTip: "양가 중간 지점의 정갈한 룸 형태 한정식집을 추천합니다.",
+        plannerTip: "양가 중간 지점의 정갈한 룸 형태 한정식집을 추천하며, 조용한 분위기 유지를 위해 사전에 코스 요리로 예약하세요.",
+        shortPlanNote: "단기 플랜은 상견례 날짜를 주말 점심으로 빠르게 고정하고 예식 날짜 논의를 최우선으로 진행하세요."
     },
     {
         id: "t2",
@@ -22,7 +23,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "기획",
         isEssential: true,
         completed: true,
-        aiTip: "신랑/신부/부모님 간 예산 분담 비율을 가장 먼저 명확히 정하세요.",
+        plannerTip: "신랑/신부/부모님 간 예산 분담 비율을 가장 먼저 명확히 정하고, 비상금 예산 10%를 별도로 측정해두세요.",
+        shortPlanNote: "단기 플랜은 예산 범위를 조율할 시간이 부족하므로 결정권자(양가 부모님)와 상의해 상한선을 즉시 확정하세요."
     },
     {
         id: "t3",
@@ -33,8 +35,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "웨딩홀",
         isEssential: true, 
         completed: true,
-        aiTip: "인기홀 골든타임(토요일 12~2시)은 1년 전에 오픈되자마자 마감됩니다.",
-        shortPlanNote: "4개월 이하 단기 플랜은 잔여 타임 특가 할인을 적극 노려보세요.",
+        plannerTip: "인기홀 골든타임(토요일 12~2시)은 1년 전에 오픈되자마자 마감됩니다.",
+        shortPlanNote: "4개월 이하 단기 플랜은 원하는 날짜를 고집하기보다 웨딩홀의 잔여 타임 특가 할인을 적극 노려보세요."
     },
 
     // ── [2단계: 스드메 & 촬영] ──
@@ -47,7 +49,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "스드메",
         isEssential: true,
         completed: false,
-        aiTip: "플래너 지정 및 인기 메이크업 부원장급 예약은 일찍 마감됩니다.",
+        plannerTip: "플래너 지정 및 인기 메이크업 부원장급 예약은 빠르게 마감되니 인스타그램 포트폴리오를 미리 확인해보세요.",
+        shortPlanNote: "단기 플랜은 스드메를 각각 알아보지 말고, 플래너의 즉시 예약 가능한 패키지 묶음 상품으로 계약하세요."
     },
     {
         id: "t5",
@@ -59,8 +62,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         isEssential: true,
         completed: false,
         skipIfUnderMonths: 6,
-        aiTip: "드레스 샵 투어 피팅비(각 5만 원)는 현금 봉투로 준비해 가세요.",
-        shortPlanNote: '단기 플랜은 투어를 생략하고 한 곳에서 해결하는 "토탈 샵" 패키지를 추천합니다.',
+        plannerTip: "드레스 샵 투어 피팅비(각 5만 원)는 현금 봉투로 준비해 가세요.",
+        shortPlanNote: '단기 플랜은 여러 샵 투어를 생략하고 한 곳에서 피팅 및 셀렉을 끝내는 "토탈 샵" 패키지를 추천합니다.'
     },
     {
         id: "t6",
@@ -72,7 +75,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         isEssential: true, 
         completed: false,
         skipIfUnderMonths: 4,
-        aiTip: "유명 1인/2인 스냅 작가는 웨딩홀만큼 예약이 빨리 마감됩니다.",
+        plannerTip: "유명 1인/2인 스냅 작가는 웨딩홀만큼 예약이 빨리 마감됩니다.",
+        shortPlanNote: "단기 플랜은 개인 작가보다는 팀 단위로 운영되는 유명 스냅 업체의 잔여 일정 가능 작가를 문의하세요."
     },
     {
         id: "t7",
@@ -83,8 +87,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "신혼집여행",
         isEssential: true,
         completed: false,
-        aiTip: "유럽, 하와이 등 장거리 휴양지는 7~8개월 전에 예매해야 특가를 잡습니다.",
-        shortPlanNote: "3~4개월 단기 플랜은 무비자 휴양지(발리, 괌 등) 위주로 빠르게 결정하세요.",
+        plannerTip: "유럽, 하와이 등 장거리 휴양지는 7~8개월 전에 예매해야 특가를 잡습니다.",
+        shortPlanNote: "3~4개월 단기 플랜은 비자 발급이 필요 없거나 빠른 무비자 휴양지(발리, 괌, 푸켓 등) 위주로 확정하세요."
     },
 
     // ── [3단계: 예물/예복 & 스튜디오] ──
@@ -97,8 +101,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "예물예복",
         isEssential: true, 
         completed: false,
-        aiTip: "청담/백화점 커플링 수제 제작 및 예복 맞춤은 최소 2~3개월 소요됩니다.",
-        shortPlanNote: "단기 플랜은 백화점 기성 브랜드 반지 즉시 수령 & 예복 대여로 시간을 아끼세요.",
+        plannerTip: "청담/백화점 커플링 수제 제작 및 예복 맞춤은 제작부터 수령까지 최소 2~3개월 소요됩니다.",
+        shortPlanNote: "단기 플랜은 백화점 기성 브랜드 반지 즉시 수령 및 예복 대여(대여복 수선)로 시간을 아끼세요."
     },
     {
         id: "t9",
@@ -110,6 +114,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         isEssential: false, 
         completed: false,
         skipIfUnderMonths: 6,
+        plannerTip: "드레스 셀렉 시 슬림, 풍성, 색상 드레스의 조합을 다양하게 구성해야 스튜디오 사진 컨셉이 다채로워집니다.",
+        shortPlanNote: "단기 플랜은 스튜디오 촬영 당일 샵에서 직접 드레스를 고르는 '당일 현장 셀렉' 방식을 활용하세요."
     },
     {
         id: "t10",
@@ -121,7 +127,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         isEssential: false, 
         completed: false,
         skipIfUnderMonths: 4,
-        aiTip: "촬영 5~7일 전 톤다운 염색이 가장 사진에 고급스럽게 담깁니다.",
+        plannerTip: "촬영 5~7일 전 톤다운 염색(초코브라운 계열)이 사진에 가장 입체적이고 고급스럽게 담깁니다.",
+        shortPlanNote: "단기 플랜은 출장 헤어변형 작가 섭외가 어려울 수 있으니 스튜디오 헬퍼 이모님의 헤어변형 가능 여부를 체크하세요."
     },
     {
         id: "t11",
@@ -132,7 +139,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "스드메",
         isEssential: true,
         completed: false,
-        aiTip: "촬영 당일 원본/수정본 데이터 구매비(약 33만~44만 원)와 헬퍼비(20만 원) 현금을 챙기세요.",
+        plannerTip: "촬영 당일 원본/수정본 데이터 구매비(약 33만~44만 원)와 헬퍼비(20만 원) 현금을 챙기세요.",
+        shortPlanNote: "단기 플랜은 모바일 청첩장 제작용 '긴급 보정본(모청용 5장)'을 일찍 받을 수 있는지 스튜디오에 사전 요청하세요."
     },
 
     // ── [4단계: 신혼집 & 청첩장] ──
@@ -145,6 +153,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "신혼집여행",
         isEssential: true,
         completed: false,
+        plannerTip: "가전은 여러 매장 견적 비교 후 '백화점 오픈점'이나 '다품목 묶음 할인'을 노리는 것이 가장 저렴합니다.",
+        shortPlanNote: "단기 플랜은 수제 가구나 해외 배송 가전을 피하고 즉시 입고/배송이 가능한 브랜드 가전·가구를 선택하세요."
     },
     {
         id: "t13",
@@ -156,6 +166,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         isEssential: true, 
         completed: false,
         skipIfUnderMonths: 4,
+        plannerTip: "예상 하객 수보다 50~100장 정도 여유 있게 인쇄하세요. 추후 추가 인쇄 시 단가가 2배 이상 올라갑니다.",
+        shortPlanNote: "4개월 이하 단기 플랜은 종이 청첩장은 최소 수량만 초스피드 초안으로 제작하고 모바일 청첩장을 메인으로 활용하세요."
     },
     {
         id: "t14",
@@ -166,6 +178,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "본식준비",
         isEssential: true, 
         completed: false,
+        plannerTip: "예식 1~2달 전부터 모임을 시작해야 피로도를 줄일 수 있으며, 참석률을 높이기 위해 구글 캘린더 일정을 함께 공유해보세요.",
+        shortPlanNote: "단기 플랜은 1:1 식사 모임이 어렵다면 소그룹 모임으로 모아서 청첩장 모임을 빠르게 완료하세요."
     },
     {
         id: "t15",
@@ -176,6 +190,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "본식준비",
         isEssential: true,
         completed: false,
+        plannerTip: "부모님 혼주 메이크업은 웨딩홀 내부 샵으로 예약해 드려야 동선이 꼬이지 않고 부모님이 편안해하십니다.",
+        shortPlanNote: "단기 플랜은 지인 사회자가 부담스러울 수 있으므로 전문 아나운서 사회자 업체를 섭외하는 것이 안전합니다."
     },
     {
         id: "t16",
@@ -186,7 +202,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "본식준비",
         isEssential: false, 
         completed: false,
-        aiTip: "청첩장 제작 시 무료로 제공되는 식전 영상 제작 쿠폰을 활용하세요.",
+        plannerTip: "종이 청첩장 제작 업체에서 무료로 제공하는 식전 영상 제작 쿠폰을 알차게 활용하세요.",
+        shortPlanNote: "단기 플랜은 사진 20~30장만 넣으면 자동 완성되는 템플릿형 모바일 식전 영상을 이용해 10분 만에 제작하세요."
     },
 
     // ── [5단계: 최종 점검 & D-Day] ──
@@ -200,6 +217,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         isEssential: true, 
         completed: false,
         skipIfUnderMonths: 6,
+        plannerTip: "시식은 주말 첫 타임 예식 시간대에 방문해야 실제 하객들에게 제공되는 음식 퀄리티를 정확히 확인할 수 있습니다.",
+        shortPlanNote: "단기 플랜은 시식과 혼주 한복 대여를 같은 주말 하루에 동선상 몰아서 한 번에 끝내세요."
     },
     {
         id: "t18",
@@ -210,6 +229,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "스드메",
         isEssential: true, 
         completed: false,
+        plannerTip: "부케는 웨딩홀 조명과 드레스 색상(순백/아이보리/비즈 등)을 고려해 대비되는 컬러로 정해야 사진에 잘 찍힙니다.",
+        shortPlanNote: "단기 플랜은 본식 드레스 최종 셀렉 날 바로 턱시도와 부케 주문까지 그 자리에서 결정을 완료하세요."
     },
     {
         id: "t19",
@@ -220,6 +241,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "본식준비",
         isEssential: true,
         completed: false,
+        plannerTip: "보증인원은 확정 후 하향 조정이 불가능하므로, 예상 참석 인원의 85~90% 수준으로 안전하게 설정하세요.",
+        shortPlanNote: "단기 플랜은 모바일 청첩장의 RSVP(참석 여부 전달) 기능을 적극 활용해 보증인원을 빠르게 집계하세요."
     },
     {
         id: "t20",
@@ -230,7 +253,8 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "본식준비",
         isEssential: true, 
         completed: false,
-        aiTip: "드레스 착용 후 음료를 마실 수 있도록 주름 빨대를 꼭 챙기세요!",
+        plannerTip: "본식 드레스 착용 후에는 음료를 마시기 힘들므로 입술이 트지 않도록 긴 주름 빨대를 꼭 준비해두세요!",
+        shortPlanNote: "단기 플랜은 젤 네일 샵 예약이 어려울 경우 붙이는 고퀄리티 젤 네일 팁 제품을 활용하면 5분 만에 해결됩니다."
     },
     {
         id: "t21",
@@ -241,6 +265,7 @@ export const DEFAULT_WEDDING_TIMELINE: ChecklistItem[] = [
         category: "본식준비",
         isEssential: true,
         completed: false,
-        aiTip: "당일 카카오페이/현금인출이 어려울 수 있으니 현금 봉투를 완벽히 분류해 두세요!",
+        plannerTip: "당일 카카오페이/현금인출이 어려울 수 있으니 예식 전날 봉투 겉면에 이름을 적어 완벽히 분류해 두세요!",
+        shortPlanNote: "단기 플랜도 예식 전날 현금 준비는 필수입니다. 가방순이나 친한 친구 한 명에게 현금 봉투 전달을 미리 부탁하세요."
     },
 ];

@@ -11,7 +11,7 @@ export default function BottomNav() {
         { name: "예산", href: "/budget", icon: Wallet },
         { name: "타임라인", href: "/timeline", icon: CalendarDays },
         { name: "비교", href: "/compare", icon: GitCompare },
-        { name: "업체", href: "/places", icon: Building2 },
+        { name: "업체", href: "/vendors", icon: Building2 },
     ]
 
     return (

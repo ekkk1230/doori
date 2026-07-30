@@ -1,18 +1,17 @@
-"use client";
-
+import type { Metadata } from 'next';
 import "./globals.css";
-import { useUiStore } from "@/store/useUiStore";
-import Header from "@/components/Header";
-import BottomNav from "@/components/BottomNav";
+import ClientLayoutShell from "@/components/ClientLayoutShell";
 
+export const metadata: Metadata = {
+	title: "doori | AI 웨딩 플래너",
+	description: "스마트한 AI 웨딩 시세 분석 및 예산 비교 서비스"
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-	const { isOnboarded } = useUiStore();
-
 	return (
 		<html lang="ko">
 			<body className="relative min-h-screen bg-rose-50/30 overflow-x-hidden antialiased">
@@ -25,13 +24,7 @@ export default function RootLayout({
 					<div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-rose-200/40 blur-3xl" />
 				</div>
 
-				<div className="relative z-10 flex flex-col min-h-screen mx-auto bg-white/60 shadow-xl">
-					{isOnboarded && <Header />}
-					
-					<main className="flex-1 w-full max-w-[140rem] mx-auto">{children}</main>
-					
-					{isOnboarded && <BottomNav />}
-				</div>
+				<ClientLayoutShell>{children}</ClientLayoutShell>
 			</body>
 		</html>
 	);

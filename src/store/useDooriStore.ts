@@ -1,5 +1,5 @@
 import { DEFAULT_WEDDING_TIMELINE } from "@/data/weddingChecklist";
-import { ChecklistItem, UserInput } from "@/types/doori";
+import { Checklist, Budget } from "@/types/doori";
 import { parseDDay } from "@/utils/date";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -9,18 +9,18 @@ interface DooriStoreState {
     budgetInManwon: string;
     location: string;
     guestCount: number;
-    budgetTier: UserInput["budgetTier"];
+    budgetTier: Budget.UserInput["budgetTier"];
     completedIds: string[];
-    checkList: ChecklistItem[];
+    checkList: Checklist.Item[];
 
     setWeddingDate: (value: string) => void;
     setBudgetInManwon: (value: string) => void;
     setLocation: (location: string) => void;
     setGuestCount: (guestCount: number) => void;
-    setBudgetTier: (budgetTier: UserInput["budgetTier"]) => void;
+    setBudgetTier: (budgetTier: Budget.UserInput["budgetTier"]) => void;
     toggleChecklist: (id: string) => void;
-    getPastTasks: (currentDDay: number) => ChecklistItem[];
-    getUpcomingTasks: (currentDDay: number) => ChecklistItem[];
+    getPastTasks: (currentDDay: number) => Checklist.Item[];
+    getUpcomingTasks: (currentDDay: number) => Checklist.Item[];
 }
 
 export const useDooriStore = create<DooriStoreState>()(
