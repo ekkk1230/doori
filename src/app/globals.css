@@ -32,6 +32,6 @@
 }
 
 @layer components {
-  .gless-card { @apply rounded-[1.5rem] border border-white/60 bg-white/80 backdrop-blur-xl shadow-card; }
+  .gless-card { @apply rounded-[1.5rem] p-[2rem] shadow-sm border border-white/60 bg-white/80 backdrop-blur-xl shadow-card; }
   .link-box { @apply flex items-center gap-[1rem] rounded-[.8rem] w-full shadow-sm p-[1.2rem_2rem] border-[.1rem] border-solid border-rose-300/50 transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-md }
 }

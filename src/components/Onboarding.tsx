@@ -4,9 +4,10 @@ import React, { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Banknote, CalendarDays, Check, ChevronRight, MapPin, Sparkles, Users, Wand2 } from "lucide-react";
-import { UserInput } from "@/types/doori";
+import { Budget } from "@/types/doori";
 import { useDooriStore } from "@/store/useDooriStore";
 import { useUiStore } from "@/store/useUiStore";
+import { useForm } from "@/hook/useForm"; 
 
 interface OnboardingProps {
     onComplete?: () => void;
@@ -28,18 +29,25 @@ const GUEST_COUNT_OPTIONS = [
     { label: "300명+", value: 300 },
 ];
 
-const BUDGET_TIER_OPTIONS: { value: UserInput["budgetTier"]; icon: typeof Banknote }[] = [
+const BUDGET_TIER_OPTIONS: { value: Budget.UserInput["budgetTier"]; icon: typeof Banknote }[] = [
     { value: "가성비", icon: Banknote },
     { value: "표준", icon: Sparkles },
     { value: "초호화", icon: Wand2 },
 ];
 
 export default function Onboarding({ onComplete }: OnboardingProps) {
-    const { weddingDate, budgetInManwon, location, guestCount, budgetTier,
-            setWeddingDate, setBudgetInManwon, setLocation, setGuestCount, setBudgetTier   
-    } = useDooriStore();
+    const dooriStore = useDooriStore();
     const { setIsOnboarded } = useUiStore();
     
+    const { form, handleChange, setFieldValue } = useForm<Budget.UserInput>({
+        weddingDate: dooriStore.weddingDate || "",
+        periodMonths: 12,
+        budgetTier: dooriStore.budgetTier || "표준",
+        totalBudget: dooriStore.totalBudget || 3500,
+        location: dooriStore.location || "",
+        guestCount: dooriStore.guestCount || 200,
+    });
+
     const containerRef = useRef<HTMLDivElement>(null);
 
     const [period, setPeriod] = useState<string | null>(null);
@@ -75,7 +83,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
         if (selectedValue === "0") {
             setInputPeriod(true);
-            setWeddingDate("");
+            setFieldValue("weddingDate", "");
         } else {
             setInputPeriod(false);
 
@@ -85,33 +93,43 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             targetDate.setMonth(targetDate.getMonth() + monthsToAdd);
 
             const formattedDate = targetDate.toISOString().split("T")[0];
-            setWeddingDate(formattedDate);
+            
+            setFieldValue("weddingDate", formattedDate);
+            setFieldValue("periodMonths", monthsToAdd);
         }
     };
 
     const handleActivePlan = () => {
-        if (!weddingDate) {
+        if (!form.weddingDate) {
             setErrorMessage("준비 기간 (예식 예정 날짜)를 선택해주세요.");
             return;
         }
-        if (!budgetInManwon) {
+        if (!form.totalBudget) {
             setErrorMessage("예식 예정 금액을 입력해주세요.");
             return;
         }
-        if (!location) {
-            setErrorMessage("예식 예정 장소를 입력해주세요.")
+        if (!form.location) {
+            setErrorMessage("예식 예정 장소를 입력해주세요.");
             return;
         }
-        if (!guestCount) {
-            setErrorMessage("예상 보증 인원을 입력해주세요.")
+        if (!form.guestCount) {
+            setErrorMessage("예상 보증 인원을 입력해주세요.");
             return;
         }
-        if (!budgetTier) {
-            setErrorMessage("희망 예산 등급을 입력해주세요.")
+        if (!form.budgetTier) {
+            setErrorMessage("희망 예산 등급을 입력해주세요.");
             return;
         }
 
+        // 제출 시점에 Zustand 스토어 업데이트
+        dooriStore.setWeddingDate(form.weddingDate);
+        dooriStore.setTotalBudget(form.totalBudget);
+        dooriStore.setLocation(form.location);
+        dooriStore.setGuestCount(form.guestCount);
+        dooriStore.setBudgetTier(form.budgetTier);
+
         setIsOnboarded(true);
+        if (onComplete) onComplete();
     };
 
     return (
@@ -128,6 +146,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                 </div>
 
                 <div className="mt-[3rem] flex flex-col gap-[2rem]">
+                    {/* 준비 기간 */}
                     <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <CalendarDays className="h-[1.8rem] w-[1.8rem] text-rose-400" />
@@ -159,19 +178,21 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         {inputPeriod && 
                             <input
                                 type="date"
-                                value={weddingDate}
-                                onChange={(e) => setWeddingDate(e.target.value)}
+                                name="weddingDate"
+                                value={form.weddingDate}
+                                onChange={handleChange}
                                 className="mt-[.8rem] w-full rounded-[1rem] border border-gray-200 px-[1.4rem] py-[1.2rem] text-[1.6rem] text-gray-800 outline-none focus:border-rose-300"
                             />
                         }
 
-                        {weddingDate && (
+                        {form.weddingDate && (
                             <p className="mt-[.8rem] text-[1.3rem] font-medium text-rose-500">
-                                예상 예식일: {weddingDate}
+                                예상 예식일: {form.weddingDate}
                             </p>
                         )}
                     </div>
 
+                    {/* 금액 입력 */}
                     <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <Banknote className="h-[1.8rem] w-[1.8rem] text-rose-400" />
@@ -179,15 +200,17 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         </label>
                         <input
                             type="number"
+                            name="totalBudget"
                             min={0}
                             step={100}
                             placeholder="예: 3500"
-                            value={budgetInManwon}
-                            onChange={(e) => setBudgetInManwon(e.target.value)}
+                            value={form.totalBudget || ""}
+                            onChange={handleChange}
                             className="mt-[.8rem] w-full rounded-[1rem] border border-gray-200 px-[1.4rem] py-[1.2rem] text-[1.6rem] text-gray-800 outline-none focus:border-rose-300"
                         />
                     </div>
 
+                    {/* 장소 입력 */}
                     <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <MapPin className="h-[1.8rem] w-[1.8rem] text-rose-400" />
@@ -195,13 +218,15 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         </label>
                         <input
                             type="text"
+                            name="location"
                             placeholder="예: 서울 강남구"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
+                            value={form.location}
+                            onChange={handleChange}
                             className="mt-[.8rem] w-full rounded-[1rem] border border-gray-200 px-[1.4rem] py-[1.2rem] text-[1.6rem] text-gray-800 outline-none focus:border-rose-300"
                         />
                     </div>
 
+                    {/* 보증 인원 */}
                     <div className="form-item">
                         <label className="flex items-center gap-[.6rem] text-[1.5rem] font-semibold text-gray-700">
                             <Users className="h-[1.8rem] w-[1.8rem] text-rose-400" />
@@ -209,12 +234,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         </label>
                         <div className="mt-[.8rem] grid grid-cols-4 gap-[.8rem]">
                             {GUEST_COUNT_OPTIONS.map(({ label, value }) => {
-                                const isSelected = guestCount === value;
+                                const isSelected = form.guestCount === value;
                                 return (
                                     <button
                                         key={value}
                                         type="button"
-                                        onClick={() => setGuestCount(value)}
+                                        onClick={() => setFieldValue("guestCount", value)}
                                         className={`rounded-[1rem] border px-[1rem] py-[1.2rem] text-[1.4rem] font-medium transition-colors ${
                                             isSelected
                                                 ? "border-rose-400 bg-rose-50 text-rose-500"
@@ -228,18 +253,19 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         </div>
                     </div>
 
+                    {/* 희망 예산 등급 */}
                     <div className="form-item">
                         <span className="text-[1.5rem] font-semibold text-gray-700">
                             희망 예산 등급
                         </span>
                         <div className="mt-[.8rem] grid grid-cols-3 gap-[.8rem]">
                             {BUDGET_TIER_OPTIONS.map(({ value, icon: Icon }) => {
-                                const isSelected = budgetTier === value;
+                                const isSelected = form.budgetTier === value;
                                 return (
                                     <button
                                         key={value}
                                         type="button"
-                                        onClick={() => setBudgetTier(value)}
+                                        onClick={() => setFieldValue("budgetTier", value)}
                                         className={`flex flex-col items-center gap-[.4rem] rounded-[1rem] border px-[1rem] py-[1.2rem] text-[1.4rem] font-medium transition-colors ${
                                             isSelected
                                                 ? "border-rose-400 bg-rose-50 text-rose-500"

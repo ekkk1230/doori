@@ -19,6 +19,14 @@ export namespace Budget {
 		details?: string;           // 메모 (보증인원, 추가금 등)
 	}
 
+	// 예산 배분 요약 리스트
+	export interface SummaryItem {
+		id: string;
+		category: string;
+		amount: number;
+		icon?: string;
+	}
+
 	// 예산 항목 카드용 타입
 	export interface Item {
 		id: string;
@@ -26,7 +34,7 @@ export namespace Budget {
 		categoryRatio: number;       // 권장 비중 (%)
 		standardRangeText: string;   // 표준 가이드 (예: "1,500~2,500만 원")
 		targetAmount: number;        // 목표 예산
-		actualAmount: number | null; // 실제 지출 금액
+		actualAmount: number | 0;    // 실제 지출 금액
 		aiAdvice: string;            // 항목별 AI 꿀팁
 	}
 

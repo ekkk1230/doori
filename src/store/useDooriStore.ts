@@ -6,7 +6,7 @@ import { persist } from "zustand/middleware";
 
 interface DooriStoreState {
     weddingDate: string;
-    budgetInManwon: string;
+    totalBudget: number;
     location: string;
     guestCount: number;
     budgetTier: Budget.UserInput["budgetTier"];
@@ -14,7 +14,7 @@ interface DooriStoreState {
     checkList: Checklist.Item[];
 
     setWeddingDate: (value: string) => void;
-    setBudgetInManwon: (value: string) => void;
+    setTotalBudget: (value: number) => void;
     setLocation: (location: string) => void;
     setGuestCount: (guestCount: number) => void;
     setBudgetTier: (budgetTier: Budget.UserInput["budgetTier"]) => void;
@@ -27,7 +27,7 @@ export const useDooriStore = create<DooriStoreState>()(
     persist(
         (set, get) => ({
             weddingDate: "",
-            budgetInManwon: "",
+            totalBudget: 0,
             location: "",
             guestCount: 0,
             budgetTier: "표준",
@@ -35,7 +35,7 @@ export const useDooriStore = create<DooriStoreState>()(
             checkList: DEFAULT_WEDDING_TIMELINE,
         
             setWeddingDate: weddingDate => set({ weddingDate }),
-            setBudgetInManwon: budgetInManwon => set({ budgetInManwon }),
+            setTotalBudget: totalBudget => set({ totalBudget }),
             setLocation: location => set({ location }),
             setGuestCount: guestCount => set({ guestCount }),
             setBudgetTier: budgetTier => set({ budgetTier }),

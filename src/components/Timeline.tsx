@@ -7,7 +7,7 @@ import { Gem, Sparkles, RefreshCw } from "lucide-react";
 import Loading from "@/app/Loading";
 
 export default function Timeline() {
-    const { weddingDate, budgetInManwon, getPastTasks, getUpcomingTasks, checkList, toggleChecklist } = useDooriStore();
+    const { weddingDate, totalBudget, getPastTasks, getUpcomingTasks, checkList, toggleChecklist } = useDooriStore();
 
     const [isMounted, setIsMounted] = useState(false);
     const [aiFeedback, setAiFeedback] = useState<string>("");
@@ -45,7 +45,7 @@ export default function Timeline() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     periodMonths,
-                    budgetInManwon,
+                    totalBudget,
                     usedBudgetInManwon: 0, // 사용된 예산 변수가 있다면 지정
                     progressPercent,
                     completedTaskTitles,
@@ -83,7 +83,7 @@ export default function Timeline() {
                 </div>
                 <div className="w-full bg-gray-200/80 rounded-full h-[1.4rem] my-3 overflow-hidden">
                     <div 
-                        className="gradient-card h-[1.4rem] rounded-full transition-all duration-500 ease-out" 
+                        className="gradient-card h-full rounded-full transition-all duration-500 ease-out" 
                         style={{ width: `${progressPercent}%` }}
                     />
                 </div>

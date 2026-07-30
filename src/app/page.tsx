@@ -5,7 +5,7 @@ import { useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import Onboarding from "@/components/Onboarding";
 import { useUiStore } from "@/store/useUiStore";
-import PlanTab from "@/components/PlanTab";
+import Plan from "@/components/Plan";
 import BottomNav from "@/components/BottomNav";
 import Header from "@/components/Header";
 
@@ -30,7 +30,7 @@ export default function Home() {
 						<Onboarding />
 						) : (
 						/* 온보딩 완료 시 메인 플랜 탭 노출 */
-						<PlanTab />
+						<Plan />
 						)}
 					</>
 				)}
