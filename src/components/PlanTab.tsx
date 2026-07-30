@@ -1,7 +1,6 @@
 import { useDooriStore } from "@/store/useDooriStore";
 import { CalendarDays, MapPin, Wallet, Sparkles, ChevronRight } from "lucide-react";
 import { useRef } from "react";
-import Header from "./Header";
 import { calculateWeddingPeriod } from "@/utils/date";
 import Link from "next/link";
 
@@ -14,8 +13,6 @@ export default function PlanTab() {
 
     return (
         <>
-            <Header />
-
             <div ref={containerRef} className="p-[2rem_2.4rem]">
                 <div className="myPlanCard gradient-card rounded-[1.6rem] p-[2rem]">
                     <p className="text-white text-[1.6rem] flex items-center mb-[1rem]"><Sparkles className="mr-[.8rem] w-[2rem] h-[2rem]" />AI 맞춤 플랜</p>
@@ -64,7 +61,7 @@ export default function PlanTab() {
                         <span className="text-[3rem]">📍</span>
                         <div>
                             <p className="sm-tit">지역 업체</p>
-                            <p className="item-count tit">서울 강남</p>
+                            <p className="item-count tit">{location}</p>
                             <p className="sm-tit">업체 둘러보기</p>
                         </div>
                     </Link>

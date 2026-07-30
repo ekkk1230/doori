@@ -1,15 +1,20 @@
 import { create } from "zustand";
-
-type TabType = "onboarding" | "planTab";
+import { persist } from "zustand/middleware";
 
 interface UiStoreState {
-    activeTab: TabType;
+    isOnboarded: boolean;
 
-    setActiveTab: (tab: TabType) => void
+    setIsOnboarded: (status: boolean) => void
 }
 
-export const useUiStore = create<UiStoreState>((set) => ({
-    activeTab: "onboarding",
-    
-    setActiveTab: activeTab => set({ activeTab }),
-}))
+export const useUiStore = create<UiStoreState>()(
+    persist(
+      (set) => ({
+        isOnboarded: false, 
+        setIsOnboarded: (isOnboarded) => set({ isOnboarded }),
+      }),
+      {
+        name: "doori-ui-storage",
+      }
+    )
+  );

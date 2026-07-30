@@ -1,6 +1,8 @@
 'use client';
 
-import { MOCK_TIMELINE_ITEMS, MOCK_USER_INPUT } from "@/constants/mockData"
+import { MOCK_USER_INPUT } from "@/constants/mockData"
+import { DEFAULT_WEDDING_TIMELINE } from "@/data/weddingChecklist";
+
 import { ChecklistItem } from "@/types/doori";
 import { calculateWeddingPeriod } from "@/utils/date";
 import { useState } from "react"
@@ -8,7 +10,7 @@ import { useState } from "react"
 export default function Timeline() {
     const [weddingDate, setWeddingDate] = useState<string>(MOCK_USER_INPUT.weddingDate);
     // console.log(weddingDate)
-    const [items, setItems] = useState<ChecklistItem[]>(MOCK_TIMELINE_ITEMS);
+    const [items, setItems] = useState<ChecklistItem[]>(DEFAULT_WEDDING_TIMELINE);
 
     const { periodMonths, dDayText } = calculateWeddingPeriod(weddingDate);
 

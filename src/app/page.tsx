@@ -6,15 +6,17 @@ import SplashScreen from "@/components/SplashScreen";
 import Onboarding from "@/components/Onboarding";
 import { useUiStore } from "@/store/useUiStore";
 import PlanTab from "@/components/PlanTab";
+import BottomNav from "@/components/BottomNav";
+import Header from "@/components/Header";
 
 export default function Home() {
-	const { activeTab } = useUiStore();
+	const { isOnboarded } = useUiStore();
 
 	const [showSplash, setShowSplash] = useState(true);
     const [isLoadingData, setIsLoadingData] = useState(false);
-
+	
 	return (
-			<div>
+			<>
 				{showSplash && (
 					<SplashScreen
 						isLoadingData={isLoadingData}
@@ -23,11 +25,16 @@ export default function Home() {
 				)}
 				{!showSplash && (
 					<>
-						{ activeTab === "onboarding" && <Onboarding /> }
-						{ activeTab === "planTab" && <PlanTab /> }
+						{!isOnboarded ? (
+						/* 아직 온보딩 전이라면 */
+						<Onboarding />
+						) : (
+						/* 온보딩 완료 시 메인 플랜 탭 노출 */
+						<PlanTab />
+						)}
 					</>
 				)}
 				{/* <Timeline /> */}
-			</div>
+			</>
 		);
 }

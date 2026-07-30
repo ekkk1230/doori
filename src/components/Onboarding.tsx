@@ -38,7 +38,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     const { weddingDate, budgetInManwon, location, guestCount, budgetTier,
             setWeddingDate, setBudgetInManwon, setLocation, setGuestCount, setBudgetTier   
     } = useDooriStore();
-    const { setActiveTab } = useUiStore();
+    const { setIsOnboarded } = useUiStore();
     
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -111,12 +111,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             return;
         }
 
-        setActiveTab("planTab");
+        setIsOnboarded(true);
     };
 
     return (
-        <div className="flex min-h-screen flex-col justify-center bg-rose-50 px-6 py-12">
-            <div ref={containerRef} className="mx-auto max-w-[140rem] rounded-[1.5rem] border border-white/60 bg-white/80 p-8 shadow-card backdrop-blur-xl">
+        <div className="flex min-h-screen flex-col justify-center px-6 py-12">
+            <div ref={containerRef} className="mx-auto w-full max-w-[140rem] rounded-[1.5rem] border border-white/60 bg-white/80 p-8 shadow-card backdrop-blur-xl">
                 <div className="form-item">
                     <h1 className="tit text-[2.4rem] tracking-[-.04rem] font-bold text-gray-800">
                         두 분의 웨딩,<br />
