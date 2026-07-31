@@ -26,4 +26,4 @@ export const BUDGET_TIER_GUIDES: Record<Budget.CategoryKey , Record<Budget.TierK
         표준: { tierGuideText: "일반적인 기타 비용", standardRangeText: "250~350만 원", recommendedRatio: 10 },
         초호화: { tierGuideText: "여유로운 예비비 편성", standardRangeText: "500만 원 이상", recommendedRatio: 10 },
     },
-  };
+};

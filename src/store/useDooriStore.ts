@@ -23,6 +23,8 @@ interface DooriStoreState {
     toggleChecklist: (id: string) => void;
     getPastTasks: (currentDDay: number) => Checklist.Item[];
     getUpcomingTasks: (currentDDay: number) => Checklist.Item[];
+    setBudgetItems: (items: Budget.Item[]) => void;
+    updateBudgetItem: (id: string, field: "targetAmount" | "actualAmount", value: number | null) => void;
 }
 
 export const useDooriStore = create<DooriStoreState>()(
@@ -60,7 +62,14 @@ export const useDooriStore = create<DooriStoreState>()(
         
                     return itemDDay < currentDDay;
                 })
-            }
+            },
+            setBudgetItems: budgetItems => set({ budgetItems }),
+            updateBudgetItem: (id, field, value) =>
+                set((state) => ({
+                    budgetItems: state.budgetItems.map((item) =>
+                        item.id === id ? { ...item, [field]: value } : item
+                    ),
+                })),
         }),
         {
             name: "doori-storage",
