@@ -1,4 +1,5 @@
 import { Budget, Vendor } from "@/types/doori";
+import { Building2, Camera, Gem, Plane, MoreHorizontal } from "lucide-react";
 
 // 유저 온보딩/기본 입력 데이터 (단위: 만 원으로 통일)
 export const MOCK_USER_INPUT: Budget.UserInput = {
@@ -14,6 +15,7 @@ export const MOCK_USER_INPUT: Budget.UserInput = {
 export const MOCK_BUDGET_SUMMARY: Budget.Item[] = [
     {
         id: "b1",
+        icon: Building2,
         category: "웨딩홀",
         categoryRatio: 40,
         standardRangeText: "1,200~1,600만 원",
@@ -23,6 +25,7 @@ export const MOCK_BUDGET_SUMMARY: Budget.Item[] = [
     },
     {
         id: "b2",
+        icon: Camera,
         category: "스드메",
         categoryRatio: 15,
         standardRangeText: "400~600만 원",
@@ -32,6 +35,7 @@ export const MOCK_BUDGET_SUMMARY: Budget.Item[] = [
     },
     {
         id: "b3",
+        icon: Gem,
         category: "예물/반지",
         categoryRatio: 15,
         standardRangeText: "400~600만 원",
@@ -41,6 +45,7 @@ export const MOCK_BUDGET_SUMMARY: Budget.Item[] = [
     },
     {
         id: "b4",
+        icon: Plane,
         category: "신혼여행",
         categoryRatio: 15,
         standardRangeText: "400~600만 원",
@@ -50,6 +55,7 @@ export const MOCK_BUDGET_SUMMARY: Budget.Item[] = [
     },
     {
         id: "b5",
+        icon: MoreHorizontal,
         category: "기타",
         categoryRatio: 10,
         standardRangeText: "200~400만 원",

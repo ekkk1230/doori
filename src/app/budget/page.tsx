@@ -1,3 +1,4 @@
+import BudgetInputForm from '@/components/BudgetInputForm';
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: "doori | 예산",
@@ -6,6 +7,6 @@ export const metadata: Metadata = {
 
 export default function BudgetPage() {
     return (
-        <div>page</div>
+        <BudgetInputForm />
     )
 }

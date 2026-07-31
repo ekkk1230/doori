@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 // 1. 예산 & 견적 & AI 분석 리포트 관련 타입
 export namespace Budget {
 	// 유저 초기 입력 조건
@@ -9,6 +11,9 @@ export namespace Budget {
 		location: string;           // 예: '서울 강남구'
 		guestCount: number;
 	}
+
+    // 카테고리별/티어별 전체 가이드 맵 타입
+    export type TierGuideMap = Record<CategoryKey, Record<TierKey, TierGuideDetail>>;
 
 	// 유저 실제 상담/계약 입력 견적
 	export interface ContractInput {
@@ -27,9 +32,20 @@ export namespace Budget {
 		icon?: string;
 	}
 
+	// 티어 가이드 관련 타입 추가
+	export type CategoryKey = '웨딩홀' | '스드메' | '예물/반지' | '신혼여행' | '기타';
+	export type TierKey = UserInput['budgetTier'];
+
+	export interface TierGuideDetail {
+		tierGuideText: string;      // 예: "호텔/전문홀 중급"
+		standardRangeText: string;  // 예: "1,500~2,500만 원"
+		recommendedRatio: number;   // 추천 비중 (%) 예: 45
+	}
+
 	// 예산 항목 카드용 타입
 	export interface Item {
 		id: string;
+		icon: LucideIcon;
 		category: '웨딩홀' | '스드메' | '예물/반지' | '신혼여행' | '기타';
 		categoryRatio: number;       // 권장 비중 (%)
 		standardRangeText: string;   // 표준 가이드 (예: "1,500~2,500만 원")

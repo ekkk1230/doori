@@ -22,16 +22,22 @@
 }
 
 @layer utilities { 
+  .container { @apply p-[2rem_2.4rem] w-full max-w-full }
   .tit { font-family: var(--font-jua); }
-  .gradient-card { background-image: linear-gradient(to right, #ff7a6e 0%, #fb923c 50%, #fb5d50 100%); }
+  .gradient-card {background-image: linear-gradient(to right, #ff7a6e 0%, #fb923c 50%, #fb5d50 100%); }
 
   .plan-util-item { @apply inline-flex items-center rounded-full bg-white/20 px-[1.6rem] py-[1rem] text-[1.4rem] text-white backdrop-blur-md; }
   .plan-util-item .icon { @apply mr-[0.4rem] h-[1.6rem] w-[1.6rem]; }
   .sm-tit { @apply text-[1.2rem] text-[#777] }
   .item-count { @apply text-[2rem] }
+  
+  .bg1 { border-color: rgb(255, 240, 243, .5); background: linear-gradient(135deg, #ffffff 0%, #fffafb 50%, #fff0f3 100%); }
+  .bg2 { border-color: rgb(212, 237, 255, .5); background: linear-gradient(135deg, #ffffff 0%, #f6fbfe 50%, #d4edff 100%); }
+  .bg3 { border-color: rgb(238, 251, 244, .5); background: linear-gradient(135deg, #ffffff 0%, #f6fdf9 50%, #eefbf4 100%); }
+  .bg4 { border-color: rgb(247, 242, 255, .5); background: linear-gradient(135deg, #ffffff 0%, #fcfaff 50%, #f7f2ff 100%); }
 }
 
 @layer components {
   .gless-card { @apply rounded-[1.5rem] p-[2rem] shadow-sm border border-white/60 bg-white/80 backdrop-blur-xl shadow-card; }
-  .link-box { @apply flex items-center gap-[1rem] rounded-[.8rem] w-full shadow-sm p-[1.2rem_2rem] border-[.1rem] border-solid border-rose-300/50 transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-md }
+  .link-box { @apply flex items-center gap-[1rem] rounded-[.8rem] w-full shadow-sm p-[1.2rem_2rem] border-[.1rem] border-solid transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-md }
 }

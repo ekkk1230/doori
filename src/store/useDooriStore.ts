@@ -1,3 +1,4 @@
+import { MOCK_BUDGET_SUMMARY } from "@/constants/mockData";
 import { DEFAULT_WEDDING_TIMELINE } from "@/data/weddingChecklist";
 import { Checklist, Budget } from "@/types/doori";
 import { parseDDay } from "@/utils/date";
@@ -12,6 +13,7 @@ interface DooriStoreState {
     budgetTier: Budget.UserInput["budgetTier"];
     completedIds: string[];
     checkList: Checklist.Item[];
+    budgetItems: Budget.Item[];
 
     setWeddingDate: (value: string) => void;
     setTotalBudget: (value: number) => void;
@@ -33,6 +35,7 @@ export const useDooriStore = create<DooriStoreState>()(
             budgetTier: "표준",
             completedIds: [],
             checkList: DEFAULT_WEDDING_TIMELINE,
+            budgetItems: MOCK_BUDGET_SUMMARY,
         
             setWeddingDate: weddingDate => set({ weddingDate }),
             setTotalBudget: totalBudget => set({ totalBudget }),
