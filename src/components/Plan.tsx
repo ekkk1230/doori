@@ -1,14 +1,14 @@
 import { useDooriStore } from "@/store/useDooriStore";
 import { CalendarDays, MapPin, Wallet, Sparkles, ChevronRight, UserRound } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { calculateWeddingPeriod, parseDDay } from "@/utils/date";
 import Link from "next/link";
-import { MOCK_BUDGET_SUMMARY } from "@/constants/mockData"; 
+import { DEFAULT_BUDGET_TEMPLATE } from "@/data/budgetTemplate";
 
 export default function PlanTab() {
     const { 
-        weddingDate, totalBudget, location, guestCount, budgetTier,
-        getUpcomingTasks
+        weddingDate, totalBudget, location, guestCount, budgetTier, budgetItems,
+        getUpcomingTasks, initBudgetItems
     } = useDooriStore();
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -17,6 +17,10 @@ export default function PlanTab() {
     const upcomingTasks = getUpcomingTasks(dDay.diffDays);
 
     // console.log(upcomingTasks)
+
+    useEffect(() => {
+        initBudgetItems();
+    }, [weddingDate])
     
 
     return (
@@ -83,13 +87,13 @@ export default function PlanTab() {
                 <div className="gless-card mt-[2rem]">
                     <p className="tit text-[1.8rem] mb-[1rem]">예산 배분 요약</p>
                     <ul className="space-y-[1.6rem]">
-                        {MOCK_BUDGET_SUMMARY.map(item => {
+                        {budgetItems.map(item => {
                             const Icon = item.icon;
-                            const itemBudgetPercent = Math.round((item.actualAmount / item.targetAmount) * 100);
+                            const itemBudgetPercent = Math.round((item.actualAmount? item.actualAmount / item.targetAmount : 0) * 100);
 
                             return (
                                 <li key={item.id} className="flex items-center text-[1.6rem] gap-[1rem]">
-                                    <Icon className="h-[4rem] w-[4rem] text-rose-400" />
+                                    {/* <Icon className="h-[4rem] w-[4rem] text-rose-400" /> */}
                                     <p className="min-w-[8rem] whitespace-nowrap">{item.category}</p>
                                     <div className="w-full bg-gray-200/80 rounded-full h-[1rem] my-3 overflow-hidden">
                                         <div 
@@ -117,7 +121,7 @@ export default function PlanTab() {
 
                             return (
                                 <li key={item.id} className="flex text-[1.6rem] p-[1rem_1.2rem] rounded-[1.2rem] bg-gray-200/20">
-                                    <p className="tit mr-[1rem] text-rose-700">D-{remainingDate}</p>
+                                    <p className="tit mr-[1rem] text-rose-700 w-[4rem]">D-{remainingDate}</p>
                                     <p className="font-bold">{item.title}</p>
                                     <p className="ml-auto text-[1.2rem] text-rose-950 font-semibold p-[.6rem_1.8rem] rounded-[80rem] bg-amber-200/50">{item.isEssential && "필수"}</p>
                                 </li>

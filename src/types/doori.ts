@@ -50,7 +50,7 @@ export namespace Budget {
 		categoryRatio: number;       // 권장 비중 (%)
 		standardRangeText: string;   // 표준 가이드 (예: "1,500~2,500만 원")
 		targetAmount: number;        // 목표 예산
-		actualAmount: number | 0;    // 실제 지출 금액
+		actualAmount: number | null;    // 실제 지출 금액
 		aiAdvice: string;            // 항목별 AI 꿀팁
 	}
 

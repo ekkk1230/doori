@@ -1,4 +1,4 @@
-import { MOCK_BUDGET_SUMMARY } from "@/constants/mockData";
+import { DEFAULT_BUDGET_TEMPLATE } from "@/data/budgetTemplate";
 import { DEFAULT_WEDDING_TIMELINE } from "@/data/weddingChecklist";
 import { Checklist, Budget } from "@/types/doori";
 import { parseDDay } from "@/utils/date";
@@ -25,6 +25,7 @@ interface DooriStoreState {
     getUpcomingTasks: (currentDDay: number) => Checklist.Item[];
     setBudgetItems: (items: Budget.Item[]) => void;
     updateBudgetItem: (id: string, field: "targetAmount" | "actualAmount", value: number | null) => void;
+    initBudgetItems: () => void;
 }
 
 export const useDooriStore = create<DooriStoreState>()(
@@ -37,7 +38,7 @@ export const useDooriStore = create<DooriStoreState>()(
             budgetTier: "표준",
             completedIds: [],
             checkList: DEFAULT_WEDDING_TIMELINE,
-            budgetItems: MOCK_BUDGET_SUMMARY,
+            budgetItems: DEFAULT_BUDGET_TEMPLATE,
         
             setWeddingDate: weddingDate => set({ weddingDate }),
             setTotalBudget: totalBudget => set({ totalBudget }),
@@ -70,6 +71,14 @@ export const useDooriStore = create<DooriStoreState>()(
                         item.id === id ? { ...item, [field]: value } : item
                     ),
                 })),
+            initBudgetItems: () => {
+                const { totalBudget, budgetItems } = get();
+                const updated = budgetItems.map((item) => ({
+                    ...item,
+                    targetAmount: Math.round(totalBudget * (item.categoryRatio / 100)),
+                }));
+                set({ budgetItems: updated });
+            },
         }),
         {
             name: "doori-storage",
