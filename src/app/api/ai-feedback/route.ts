@@ -8,7 +8,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { 
             periodMonths, 
-            budgetInManwon, 
+            totalBudget, 
             usedBudgetInManwon = 0,
             progressPercent, 
             completedTaskTitles = [],    // 완료한 Task 제목 목록
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         } = body;
 
         // 남은 잔액
-        const remainingBudget = budgetInManwon ? budgetInManwon - usedBudgetInManwon : null;
+        const remainingBudget = totalBudget ? totalBudget - usedBudgetInManwon : null;
 
         const prompt = `
             너는 웨딩 플래너 AI '두리(DOORI)'야. 
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
             
             [유저 현재 상황]
             - 결혼 준비 기간: ${periodMonths}개월 코스
-            - 예산 상황: 전체 ${budgetInManwon}만 원 / 현재 지출 ${usedBudgetInManwon}만 원 ${remainingBudget !== null ? `(남은 예산: ${remainingBudget}만 원)` : ''}
+            - 예산 상황: 전체 ${totalBudget}만 원 / 현재 지출 ${usedBudgetInManwon}만 원 ${remainingBudget !== null ? `(남은 예산: ${remainingBudget}만 원)` : ''}
             - 현재 진행률: ${progressPercent}%
             
             [체크리스트 현황]

@@ -17,6 +17,8 @@ export default function Timeline() {
         setIsMounted(true);
     }, []);
 
+    console.log(totalBudget)
+
     const { diffDays, dDayText, periodMonths } = calculateWeddingPeriod(weddingDate);
     const currentDDay = parseDDay(dDayText);
 
@@ -31,6 +33,8 @@ export default function Timeline() {
     const fetchAiFeedback = async () => {
         setIsLoadingAi(true);
         try {
+            const numericTotalBudget = Number(totalBudget) || 0;
+            
             const completedTaskTitles = upcomingTasks
                 .filter(item => item.completed)
                 .map(item => item.title);
@@ -45,7 +49,7 @@ export default function Timeline() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     periodMonths,
-                    totalBudget,
+                    totalBudget: numericTotalBudget,
                     usedBudgetInManwon: 0, // 사용된 예산 변수가 있다면 지정
                     progressPercent,
                     completedTaskTitles,
@@ -76,7 +80,7 @@ export default function Timeline() {
     return (
         <>
             <div className="mt-[1rem] gless-card p-[2.4rem_2rem] mx-[2rem]">
-                <p className="text-[1.2rem]">현재 진행률</p>
+                <p className="text-[1.2rem] flex items-center gap-[.4rem]"><Gem className="w-[1.2rem] h-[1.2rem]" /> 현재 진행률</p>
                 <div className="flex items-center tit">
                     <span className="font-bold text-[3rem]">{progressPercent}</span>
                     <sub className="text-[1.8rem] ml-[.4rem] text-[#b6a17a]">%</sub>
@@ -90,13 +94,13 @@ export default function Timeline() {
                 <ul className="flex">
                     <li className="text-[1.2rem] flex items-center text-[#777]">{completedCount}/{upcomingTasks.length} 완료</li>
                     <li className="text-[1.2rem] flex items-center text-[#777] before:content-['·'] before:mx-[.4rem]">{periodMonths}개월 코스</li>
+                    <li className="text-[1.2rem] flex items-center text-[#777] before:content-['·'] before:mx-[.4rem]">{periodMonths}개월 플랜이므로 {pastTasks.length}개 항목이 자동 생략 되었어요.</li>
                 </ul>
-                <div><Gem/> {periodMonths}개월 플랜이므로 {pastTasks.length}개 항목이 자동 생략 되었어요.</div>
                 
-                {/* 💡 Total Tip (AI 피드백) */}
+                {/* Total Tip (AI 피드백) */}
                 <div className="total-tip mt-4 p-4 rounded-xl bg-amber-50/70 border border-amber-200/60">
                     <div className="flex items-center justify-between font-bold mb-1 text-amber-800">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-[.6rem] text-[1.4rem]">
                             <Sparkles className="w-4 h-4" />
                             <span>DOORI AI 맞춤 피드백</span>
                         </div>
@@ -110,9 +114,9 @@ export default function Timeline() {
                         </button>
                     </div>
                     {isLoadingAi ? (
-                        <p className="text-gray-400 text-xs animate-pulse">DOORI AI가 준비 상황을 분석 중이에요...</p>
+                        <p className="text-gray-400 text-[1.6rem] animate-pulse">DOORI AI가 준비 상황을 분석 중이에요...</p>
                     ) : (
-                        <p className="text-xs text-amber-950 leading-relaxed whitespace-pre-line">
+                        <p className="text-[1.6rem] text-amber-950 leading-relaxed break-keep">
                             {aiFeedback || "일정을 분석 중입니다..."}
                         </p>
                     )}

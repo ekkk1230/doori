@@ -6,9 +6,11 @@ export const useForm = <T extends Record<string, any>>(initialState: T) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
 
+        const isNumberType = type === "number" || type === "range";
+
         setForm((prev) => ({
             ...prev,
-            [name]: type === "number" ? (value === "" ? 0 : Number(value)) : value,
+            [name]: isNumberType ? (value === "" ? 0 : Number(value)) : value,
         }));
     };
 

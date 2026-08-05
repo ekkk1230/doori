@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import "./globals.css";
 import ClientLayoutShell from "@/components/ClientLayoutShell";
+import ModalLayer from '@/components/modal/ModalLayer';
 
 export const metadata: Metadata = {
 	title: "doori | AI 웨딩 플래너",
@@ -25,6 +26,8 @@ export default function RootLayout({
 				</div>
 
 				<ClientLayoutShell>{children}</ClientLayoutShell>
+
+				<ModalLayer />
 			</body>
 		</html>
 	);

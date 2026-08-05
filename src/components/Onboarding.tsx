@@ -8,6 +8,7 @@ import { Budget } from "@/types/doori";
 import { useDooriStore } from "@/store/useDooriStore";
 import { useUiStore } from "@/store/useUiStore";
 import { useForm } from "@/hook/useForm"; 
+import { BUDGET_TIER_OPTIONS } from "@/data/budgetTier";
 
 interface OnboardingProps {
     onComplete?: () => void;
@@ -27,12 +28,6 @@ const GUEST_COUNT_OPTIONS = [
     { label: "200명", value: 200 },
     { label: "250명", value: 250 },
     { label: "300명+", value: 300 },
-];
-
-const BUDGET_TIER_OPTIONS: { value: Budget.UserInput["budgetTier"]; icon: typeof Banknote }[] = [
-    { value: "가성비", icon: Banknote },
-    { value: "표준", icon: Sparkles },
-    { value: "초호화", icon: Wand2 },
 ];
 
 export default function Onboarding({ onComplete }: OnboardingProps) {

@@ -46,7 +46,7 @@ export default function PlanTab() {
                 </div>
 
                 <div className="grid md:grid-cols-4 grid-cols-2 mt-[2rem] gap-[.8rem]">
-                    <Link href="#" className="link-box bg1">
+                    <Link href="/budget" className="link-box bg1">
                         <span className="text-[3rem]">💰</span>
                         <div className="relative w-full">
                             <p className="sm-tit">예산 배분</p>
@@ -55,7 +55,7 @@ export default function PlanTab() {
                             <ChevronRight className="absolute top-[50%] right-0 translate-y-[-50%]" />
                         </div>
                     </Link>
-                    <Link href="#" className="link-box bg2">
+                    <Link href="/timeline" className="link-box bg2">
                         <span className="text-[3rem]">🗓️</span>
                         <div className="relative w-full">
                             <p className="sm-tit">준비 타임라인</p>
@@ -88,6 +88,7 @@ export default function PlanTab() {
                     <p className="tit text-[1.8rem] mb-[1rem]">예산 배분 요약</p>
                     <ul className="space-y-[1.6rem]">
                         {budgetItems.map(item => {
+                            // console.log(item)
                             const Icon = item.icon;
                             const itemBudgetPercent = Math.round((item.actualAmount? item.actualAmount / item.targetAmount : 0) * 100);
 
@@ -101,7 +102,7 @@ export default function PlanTab() {
                                             style={{ width: `${itemBudgetPercent}%` }}
                                         />
                                     </div>
-                                    <p className="min-w-[8rem] text-right whitespace-nowrap">{item.targetAmount}만 원</p>
+                                    <p className="min-w-[8rem] text-right whitespace-nowrap">{item.targetAmount / 10000}만 원</p>
                                 </li>
                             )
                         })}

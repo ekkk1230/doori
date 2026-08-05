@@ -17,7 +17,7 @@ export namespace Budget {
 
 	// 유저 실제 상담/계약 입력 견적
 	export interface ContractInput {
-		category: '웨딩홀' | '스드메' | '예물/예복' | '기타';
+		category: '웨딩홀/식대' | '스드메' | '예물/예복' | '기타';
 		vendorName: string;         // 업체명 (예: A 웨딩홀)
 		location: string;           // 지역구 (예: 서울 강남구)
 		contractAmount: number;     // 실제 계약 금액 (단위: 만 원, 예: 1800 -> 1,800만 원)
@@ -33,7 +33,7 @@ export namespace Budget {
 	}
 
 	// 티어 가이드 관련 타입 추가
-	export type CategoryKey = '웨딩홀' | '스드메' | '예물/반지' | '신혼여행' | '기타';
+	export type CategoryKey = '웨딩홀/식대' | '스드메' | '예물/반지' | '신혼여행' | '기타';
 	export type TierKey = UserInput['budgetTier'];
 
 	export interface TierGuideDetail {
@@ -46,7 +46,7 @@ export namespace Budget {
 	export interface Item {
 		id: string;
 		icon: LucideIcon;
-		category: '웨딩홀' | '스드메' | '예물/반지' | '신혼여행' | '기타';
+		category: CategoryKey;
 		categoryRatio: number;       // 권장 비중 (%)
 		standardRangeText: string;   // 표준 가이드 (예: "1,500~2,500만 원")
 		targetAmount: number;        // 목표 예산

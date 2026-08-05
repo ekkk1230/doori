@@ -6,7 +6,7 @@ export const DEFAULT_BUDGET_TEMPLATE: Budget.Item[] = [
     {
         id: "b1",
         icon: Building2,
-        category: "웨딩홀",
+        category: "웨딩홀/식대",
         categoryRatio: 40,
         standardRangeText: "1,200~1,600만 원",
         targetAmount: 0,   // 예상 지출액
