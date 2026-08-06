@@ -7,56 +7,113 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { location, weddingMonth, contractInputs } = body as {
+        
+        const { location, weddingDate, guestCount, contractInputs, marketTrends } = body as {
             location: string;
-            weddingMonth: string,
+            weddingDate: string;
+            guestCount?: number | string;
             contractInputs: Budget.ContractInput[];
+            marketTrends?: any;
         };
 
-        const parsedMonth = typeof weddingMonth === "string" ? parseInt(weddingMonth, 10) : weddingMonth;
-        const userInputSummary = contractInputs.map(item => `- [${item.category}] ${item.vendorName || "미정"}: ${item.contractAmount}만 원 (메모: ${item.details || "없음"})`).join("\n");
+        // 1. 예식 연월 및 하객 수 파싱
+        const [weddingYear, weddingMonth] = weddingDate.split('-');
+        const parsedYear = parseInt(weddingYear, 10);
+        const parsedMonth = parseInt(weddingMonth, 10);
+        const parsedGuestCount = typeof guestCount === "string" ? parseInt(guestCount, 10) || 200 : (guestCount || 200);
 
+        //2. 분기 계산 및 실시간 시세 기준 추출
+        const quarterIndex = Math.ceil(parsedMonth / 3) - 1;
+        const activeQuarter = marketTrends?.quarters?.[quarterIndex];
+
+        // 수도권 여부 확인
+        const isMetro = location.includes("서울") || location.includes("경기") || location.includes("인천");
+
+        // 시세 범위
+        const targetHallRange = activeQuarter
+            ? (isMetro ? activeQuarter.metroHall : activeQuarter.localHall)
+            : "1,500만 ~ 2,500만 원";
+
+        const targetSdmRange = activeQuarter
+            ? (isMetro ? activeQuarter.metroSdm : activeQuarter.localSdm)
+            : "250만 ~ 450만 원";
+        
+        // 3. 유저 입력 견적 목록 텍스트
+        const userInputSummary = contractInputs
+            .map(item => `- [${item.category}]: ${item.contractAmount}만 원`)
+            .join("\n");
+
+        // 4. 동적 주입 프롬프트 생성
         const prompt = `
             너는 대한민국 결혼 준비 및 웨딩 견적 분석 전문가 AI야.
-            유저가 입력한 계약 견적 정보를 바탕으로, 해당 지역(${location}) 및 예식 월(${weddingMonth}월)의 시장 시세와 비교 분석한 리포트를 생성해줘.
+            유저가 입력한 계약 견적 정보를 바탕으로, 선택한 지역(${location}) 및 예식 연월(${parsedYear}년 ${parsedMonth}월)의 현실적인 시장 시세와 비교 분석한 리포트를 생성해줘.
             
             [유저 입력 정보]
-            - 예식 지역: ${location}
-            - 예식 월: ${parsedMonth}월
-            - 유저 계약/견적 목록 (※ 웨딩홀은 대관료 + 식대를 합산한 총 비용 기준, 단위: 만 원):
+            - 예식 지역: ${location} (${isMetro ? "수도권" : "지방"} 권역)
+            - 예식 연월: ${parsedYear}년 ${parsedMonth}월
+            - 하객 예상 인원: ${parsedGuestCount}명
+            - 유저 계약/견적 목록 (※ 단위: 만 원):
             ${userInputSummary}
+
+            [★ 실시간 ${parsedYear}년 ${quarterIndex + 1}분기 시장 시세 기준 (★최우선 지침★)]
+            아래 시세 데이터는 현재 서비스에서 실시간으로 산출한 정식 시세 기준표이다. 이 실시간 시세 범위를 기준으로 targetAmount 및 차액을 계산해라:
+            - **웨딩홀 (${parsedGuestCount}명 기준 시장가 범위):** ${targetHallRange} (시즌 특성: ${activeQuarter?.season || "성수기/비수기 반영"})
+            - **스드메 (패키지 기준 시장가 범위):** ${targetSdmRange}
             
-            [분석 요구사항 및 권역 기준 규칙]
-            1. **행정구역 기반 현실적 시세 반영:**
-            - **웨딩홀:** 유저가 입력한 '${location}' 시/군/구 내의 대표 웨딩홀 시세를 적용하고, 비수기/프로모션/잔여타임 할인을 감안한 실제 계약 평균가를 산출해줘.
-            - **스드메 / 예물·예복:** 
-                * 입력된 위치가 **수도권(서울/경기/인천)**인 경우: 스드메 메카인 **서울(강남/청담/종로)**의 대표 시세를 기준으로 분석해줘.
-                * 입력된 위치가 **지방**인 경우: 해당 시/구와 **가장 가까운 대도시/광역시 거점 상권**(예: 구미→대구, 익산→전주, 강릉→원주/서울 등)의 시세를 자동으로 매핑하여 분석해줘.
-            2. 유저의 총 지출액(userTotalSpent)과 시장 평균 총액(marketAverageTotal)을 계산하고, 차액(savedAmount = marketAverageTotal - userTotalSpent)을 만원 단위 숫자로 산출해줘.
-            3. 유저가 선택한 각 카테고리별로 인근 및 관련 권역에서 예비 부부들이 많이 비교하는 대표적인 타 업체 3곳(comparedVendors)을 추천 리스트로 뽑아줘.
-            4. 카테고리별로 유저 지출액과 시장 평균액, 그리고 네고/프로모션 팁이 담긴 짧은 1줄 AI 꿀팁(aiTip)을 작성해줘.
-            5. 마크다운 기호 없이 순수 텍스트를 써서 아래 지시된 JSON 구조로만 정확하게 응답해줘.
+            [수치 계산 공식]
+            - userTotalSpent = 유저가 실제 입력한 항목들의 총합 (만 원)
+            - marketAverageTotal = 유저가 입력한 항목과 동일한 카테고리의 **위 실시간 시장 시세 기준 평균가 총합** (만 원)
+            - savedAmount = marketAverageTotal - userTotalSpent
+            - savedPercent = Math.round((savedAmount / marketAverageTotal) * 100)
             
             [JSON 응답 포맷]
             {
                 "location": "${location}",
-                "weddingMonth": ${weddingMonth},
+                "weddingMonth": ${parsedMonth},
                 "userTotalSpent": 숫자(만원단위),
                 "marketAverageTotal": 숫자(만원단위),
-                "savedAmount": 숫자(만원단위, 절감이면 양수, 초과면 음수),
-                "savedPercent": 숫자(백분율, 예: 10),
-                "evaluationBadge": "최저 (아주 잘함)" | "적정 (평균)" | "주의 (초과)" 중 하나,
-                "comparedVendors": ["업체A", "업체B", "업체C"],
+                "savedAmount": 숫자(만원단위),
+                "savedPercent": 숫자(백분율),
+                "evaluationBadge": "최저 (아주 잘함)" | "적정 (평균)" | "주의 (초과)",
+                "packageComparison": {
+                "userPackage": {
+                    "title": "유저 선택 계약 조합",
+                    "baseAmount": 숫자,
+                    "extraCosts": [
+                    { "name": "항목명", "amount": 숫자 }
+                    ],
+                    "totalSpent": 숫자
+                },
+                "recommendedPackage": {
+                    "title": "시장 표준 추천 조합",
+                    "baseAmount": 숫자,
+                    "extraCosts": [
+                    { "name": "항목명", "amount": 숫자 }
+                    ],
+                    "totalSpent": 숫자
+                }
+                },
                 "itemAnalyses": [
-                    {
-                    "category": "웨딩홀",
-                    "targetAmount": 숫자,
-                    "actualAmount": 숫자,
-                    "diffAmount": 숫자,
-                    "aiTip": "1줄 꿀팁 텍스트"
-                    }
+                {
+                    "category": "카테고리명",
+                    "targetAmount": 숫자(위에서 제시한 동적 시장평균가 반영),
+                    "actualAmount": 숫자(유저입력가),
+                    "diffAmount": 숫자(차액),
+                    "marketAverageRange": "${location} ${activeQuarter?.quarter || ""} 시세 기준 (${targetHallRange})",
+                    "aiTip": "${parsedYear}년 ${parsedMonth}월 예식 및 하객수(${parsedGuestCount}명)를 반영한 1줄 시세 분석 팁"
+                }
                 ],
-                "overallDiagnosis": "전체 예산 집행에 대한 친절하고 전문적인 AI 총평"
+                "hiddenCostsGuide": [
+                {
+                    "title": "추가금 항목명",
+                    "desc": "추가금 관련 설명 및 평균 예상 비용 범위"
+                }
+                ],
+                "contractChecklist": [
+                "계약 전 체크리스트 문항 1",
+                "계약 전 체크리스트 문항 2"
+                ],
+                "overallDiagnosis": "${parsedYear}년 현실 물가와 하객 수를 고려한 전문가 AI 총평"
             }
         `;
 
@@ -66,12 +123,18 @@ export async function POST(request: Request) {
             config: {
                 // tools: [{ googleSearch: {} }],
                 responseMimeType: "application/json",
+                temperature: 0.1
             },
         });
 
-        if (!response.text) { throw new Error("AI 응답 데이터가 없습니다.") };
+        if (!response.text) {
+            throw new Error("AI 응답 데이터가 없습니다.");
+        }
 
-        const reportData: Budget.ComparisonReport = JSON.parse(response.text);
+        // 혹시 모를 마크다운 래핑 제거 후 파싱 (안전 장치)
+        const cleanedText = response.text.replace(/```json|```/g, "").trim();
+        const reportData: Budget.ComparisonReport = JSON.parse(cleanedText);
+
         return NextResponse.json(reportData);
 
     } catch (err) {

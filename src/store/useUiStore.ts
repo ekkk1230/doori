@@ -7,6 +7,7 @@ type ModalType = "check" | "confirm";
 interface UiStoreState {
     isOnboarded: boolean;
     isOpenModal: boolean;
+	isLoading: boolean;
     
     modalType: ModalType;
     modalTarget: ReactNode | null;
@@ -14,6 +15,7 @@ interface UiStoreState {
     setIsOnboarded: (status: boolean) => void
     openModal: (target: ReactNode, type?: ModalType) => void;
     closeModal: () => void;
+	setLoading: (isLoading: boolean) => void;
 }
 
 export const useUiStore = create<UiStoreState>()(
@@ -21,6 +23,7 @@ export const useUiStore = create<UiStoreState>()(
 		(set) => ({
 			isOnboarded: false, 
 			isOpenModal: false,
+			isLoading: false,
 
 			modalType: "confirm",
 			modalTarget: null,
@@ -36,6 +39,7 @@ export const useUiStore = create<UiStoreState>()(
 				modalTarget: null,
 				modalType: "confirm",
 			}),
+			setLoading: (isLoading) => set({ isLoading }),
 		}),
 		{
 			name: "doori-ui-storage",

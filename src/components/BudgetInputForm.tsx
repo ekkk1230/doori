@@ -116,7 +116,7 @@ export default function BudgetInputForm() {
                         <span className="text-[1.4rem] font-semibold text-[#555]">지출 진행률</span>
                         <span className="text-[1.4rem] font-semibold text-[#555]">{progressPercent}%</span>
                     </div>
-                    <div className="w-fullrelative bg-gray-200/80 rounded-full h-[1.4rem] my-3">
+                    <div className="w-full relative bg-gray-200/80 rounded-full h-[1.4rem] my-3">
                         <div 
                             className="gradient-card h-full rounded-full transition-all duration-500 ease-out" 
                             style={{ width: `${progressPercent}%` }}

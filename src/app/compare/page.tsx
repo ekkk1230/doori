@@ -1,3 +1,4 @@
+import Compare from '@/components/Compare';
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: "doori | 비교",
@@ -5,7 +6,7 @@ export const metadata: Metadata = {
 };
 
 export default function ComparePage() {
-  return (
-    <div>page</div>
-  )
+    return (
+		<Compare />
+    )
 }

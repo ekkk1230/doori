@@ -15,6 +15,8 @@ export default function PlanTab() {
     const dDay = calculateWeddingPeriod(weddingDate);
     
     const upcomingTasks = getUpcomingTasks(dDay.diffDays);
+    const completeItems = upcomingTasks.filter(item => item.completed);
+    const noCompleteItems = upcomingTasks.filter(item => !item.completed);
 
     // console.log(upcomingTasks)
 
@@ -59,8 +61,8 @@ export default function PlanTab() {
                         <span className="text-[3rem]">🗓️</span>
                         <div className="relative w-full">
                             <p className="sm-tit">준비 타임라인</p>
-                            <p className="item-count tit">18개 일정</p>
-                            <p className="sm-tit">0개 완료</p>
+                            <p className="item-count tit">{upcomingTasks.length}개 일정</p>
+                            <p className="sm-tit">{completeItems.length}개 완료</p>
                             <ChevronRight className="absolute top-[50%] right-0 translate-y-[-50%]" />
                         </div>
                     </Link>
@@ -112,19 +114,30 @@ export default function PlanTab() {
                 <div className="gless-card mt-[2rem] relative">
                     <p className="tit text-[1.8rem] mb-[1rem]">다가오는 일정</p>
                     <ul className="space-y-[.8rem]">
-                        {upcomingTasks.slice(0, 3).map(item => {
+                        {noCompleteItems.slice(0, 3).map(item => {
                             // console.log(item.dDay12m)
                             const currentDday = parseDDay(dDay.dDayText);
                             // console.log(currentDday)
                             const itemDday = parseDDay(item.dDay12m);
                             // console.log(itemDday)
-                            const remainingDate = currentDday - itemDday;
+                            let remainingDate = currentDday - itemDday;
+                            let dDayText = "";
+
+                            const isOverdue = remainingDate < 0;
+
+                            if (remainingDate > 0) {
+                                dDayText = `D-${remainingDate}`;
+                            } else if (remainingDate === 0) {
+                                dDayText = "D-Day";
+                            } else {
+                                dDayText = `D+${Math.abs(remainingDate)}`;
+                            };
 
                             return (
-                                <li key={item.id} className="flex text-[1.6rem] p-[1rem_1.2rem] rounded-[1.2rem] bg-gray-200/20">
-                                    <p className="tit mr-[1rem] text-rose-700 w-[4rem]">D-{remainingDate}</p>
-                                    <p className="font-bold">{item.title}</p>
-                                    <p className="ml-auto text-[1.2rem] text-rose-950 font-semibold p-[.6rem_1.8rem] rounded-[80rem] bg-amber-200/50">{item.isEssential && "필수"}</p>
+                                <li key={item.id} className={`flex text-[1.6rem] p-[1rem_1.2rem] rounded-[1.2rem] ${isOverdue ? 'bg-gray-100' : 'bg-gray-200/20'}`}>
+                                    <p className={`tit mr-[1rem] w-[6rem] font-semibold ${isOverdue ? 'text-gray-400' : 'text-rose-700'}`}>{dDayText}</p>
+                                    <p className={`font-bold ${isOverdue ? 'text-gray-500' : 'text-rose-950'}`}>{item.title}</p>
+                                    {item.isEssential && <p className={`ml-auto text-[1.2rem] font-semibold p-[.6rem_1.8rem] rounded-[80rem] ${isOverdue ? 'bg-gray-200 text-gray-600' : 'bg-amber-200/50 text-rose-950'}`}>"필수"</p>}
                                 </li>
                             )
                         })}

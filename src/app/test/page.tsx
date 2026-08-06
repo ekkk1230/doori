@@ -1,36 +1,41 @@
 "use client";
 
+import { useDooriStore } from "@/store/useDooriStore";
 import { Budget } from "@/types/doori";
 import { useState } from "react";
 
 export default function ApiTestPage() {
+  const { weddingDate } = useDooriStore();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
 
   // 지역별 테스트 케이스
-  const testCases: Record<string, { location: string; weddingMonth: number; contractInputs: Budget.ContractInput[] }> = {
+  const testCases: Record<string, { location: string; weddingDate: string; guestCount: number; contractInputs: Budget.ContractInput[] }> = {
     seoul: {
-      location: "서울 강남구",
-      weddingMonth: 10,
+      location: "경기 광명",
+      weddingDate: weddingDate,
+      guestCount: 250,
       contractInputs: [
-        { category: "웨딩홀", vendorName: "아펠가모 선릉", location: "서울 강남구", contractAmount: 1400, details: "잔여타임 프로모션 적용" },
+        { category: "웨딩홀/식대", vendorName: "광명무역센터컨벤션", location: "경기 광명", contractAmount: 1400, details: "잔여타임 프로모션 적용" },
         { category: "스드메", vendorName: "청담 스드메 패키지", location: "서울 강남구", contractAmount: 350, details: "드레스 투어 2곳" },
       ],
     },
     anyang: {
-      location: "경기 안양시 동안구",
-      weddingMonth: 1,
+      location: "경기 안양",
+      weddingDate: "2027-02-08",
+      guestCount: 200,
       contractInputs: [
-        { category: "웨딩홀", vendorName: "아르떼스 웨딩홀", location: "경기 안양시", contractAmount: 800, details: "보증인원 200명" },
+        { category: "웨딩홀/식대", vendorName: "더블룸 웨딩홀", location: "경기 안양시", contractAmount: 1600, details: "보증인원 200명" },
         { category: "스드메", vendorName: "청담 스튜디오 연계", location: "서울 강남구", contractAmount: 300, details: "메이크업 원장 지정" },
       ],
     },
     gumi: {
-      location: "경북 구미시",
-      weddingMonth: 11,
+      location: "경기 하남",
+      weddingDate: weddingDate,
+      guestCount: 300,
       contractInputs: [
-        { category: "웨딩홀", vendorName: "구미 BW웨딩", location: "경북 구미시", contractAmount: 4500, details: "비수기 할인" },
-        { category: "스드메", vendorName: "대구 대봉동 스드메 샵", location: "대구 중구", contractAmount: 680, details: "대구 원정 계약" },
+        { category: "웨딩홀/식대", vendorName: "하남컨벤션웨딩홀", location: "경기 하남", contractAmount: 4500, details: "비수기 할인" },
+        { category: "스드메", vendorName: "오모나", location: "경기 하남", contractAmount: 680, details: "드레스 투어 2곳" },
       ],
     },
   };
@@ -87,13 +92,13 @@ export default function ApiTestPage() {
 
         {/* 기존 리포트 분석 버튼들 (보라색) */}
         <button onClick={() => handleTestApi("seoul")} disabled={loading} style={btnStyle}>
-          1. 서울 강남구 테스트
+          1. 경기 광명 테스트
         </button>
         <button onClick={() => handleTestApi("anyang")} disabled={loading} style={btnStyle}>
           2. 경기 안양시 테스트
         </button>
         <button onClick={() => handleTestApi("gumi")} disabled={loading} style={btnStyle}>
-          3. 경북 구미시 테스트
+          3. 경기 하남 테스트
         </button>
       </div>
 

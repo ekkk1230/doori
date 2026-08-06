@@ -17,11 +17,8 @@ export namespace Budget {
 
 	// 유저 실제 상담/계약 입력 견적
 	export interface ContractInput {
-		category: '웨딩홀/식대' | '스드메' | '예물/예복' | '기타';
-		vendorName: string;         // 업체명 (예: A 웨딩홀)
-		location: string;           // 지역구 (예: 서울 강남구)
-		contractAmount: number;     // 실제 계약 금액 (단위: 만 원, 예: 1800 -> 1,800만 원)
-		details?: string;           // 메모 (보증인원, 추가금 등)
+		category: string;          // 예: '웨딩홀', '스드메', '예물/예복', '기타'
+        contractAmount: number;
 	}
 
 	// 예산 배분 요약 리스트
@@ -63,15 +60,40 @@ export namespace Budget {
 		savedAmount: number;
 		savedPercent: number;
 		evaluationBadge: '최저 (아주 잘함)' | '적정 (평균)' | '주의 (초과)';
-		comparedVendors: string[];
+		contractChecklist: string[];
 		itemAnalyses: {
 			category: string;
 			targetAmount: number;
 			actualAmount: number;
 			diffAmount: number;
 			aiTip: string;
+			marketAverageRange: string;
 		}[];
 		overallDiagnosis: string;
+		hiddenCostsGuide: {
+			title: string;
+			desc: string;
+		};
+		packageComparison: {
+			recommendedPackage: {
+				title: string;
+				baseAmount: number;
+				extraCosts: {
+					name: string;
+					amount: number
+				}[];
+				totalSpent: number;
+			};
+			userPackage: {
+				title: string;
+				baseAmount: number;
+				extraCosts: {
+					name: string;
+					amount: number
+				}[];
+				totalSpent: number;
+			};
+		}
 	}
 
 	// AI 꿀팁 판정용 Context 타입

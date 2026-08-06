@@ -83,7 +83,7 @@ export async function GET() {
                         "localHall": "1,100만 ~ 1,500만 원",
                         "metroSdm": "250만 ~ 350만 원",
                         "localSdm": "350만 ~ 550만 원",
-                        "seoulTotal": "약 2,000만 ~ 2,700만 원",
+                        "metroTotal": "약 2,000만 ~ 2,700만 원",
                         "localTotal": "약 1,500만 ~ 2,000만 원"
                     },
                     {
@@ -93,7 +93,7 @@ export async function GET() {
                         "localHall": "1,500만 ~ 2,000만 원",
                         "metroSdm": "300만 ~ 450만 원",
                         "localSdm": "350만 ~ 550만 원",
-                        "seoulTotal": "약 2,800만 ~ 3,600만 원",
+                        "metroTotal": "약 2,800만 ~ 3,600만 원",
                         "localTotal": "약 2,000만 ~ 2,700만 원"
                     },
                     {
@@ -103,7 +103,7 @@ export async function GET() {
                         "localHall": "1,200만 ~ 1,600만 원",
                         "metroSdm": "250만 ~ 350만 원",
                         "localSdm": "350만 ~ 550만 원",
-                        "seoulTotal": "약 2,100만 ~ 2,900만 원",
+                        "metroTotal": "약 2,100만 ~ 2,900만 원",
                         "localTotal": "약 1,600만 ~ 2,100만 원"
                     },
                     {
@@ -113,7 +113,7 @@ export async function GET() {
                         "localHall": "1,400만 ~ 1,900만 원",
                         "metroSdm": "280만 ~ 400만 원",
                         "localSdm": "350만 ~ 550만 원",
-                        "seoulTotal": "약 2,600만 ~ 3,400만 원",
+                        "metroTotal": "약 2,600만 ~ 3,400만 원",
                         "localTotal": "약 1,900만 ~ 2,500만 원"
                     }
                 ]
