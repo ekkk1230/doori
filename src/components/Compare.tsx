@@ -184,12 +184,12 @@ export default function Compare() {
                                     <ul className="space-y-[.1rem] text-[1.2rem]">
                                         {pkg.extraCosts.map(item => {
                                             return (
-                                                <li>{item.name} : {item.amount}</li>
+                                                <li>{item.name} : {item.amount}만 원</li>
                                             )
                                         })}
                                     </ul>
 
-                                    <p className="text-[1.4rem] font-bold mt-[2rem]">총 합계: <span className="text-rose-500">{pkg.totalSpent}</span></p>
+                                    <p className="text-[1.4rem] font-bold mt-[2rem]">총 합계: <span className="text-rose-500">{pkg.totalSpent}만 원</span></p>
                                 </div>
                             )
                         }) 
