@@ -4,7 +4,8 @@ import { useDooriStore } from "@/store/useDooriStore";
 import { useUiStore } from "@/store/useUiStore";
 import { Budget } from "@/types/doori";
 import { Camera, ThumbsUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as echarts from "echarts";
 
 interface QuarterData {
     quarter: string;
@@ -23,7 +24,102 @@ interface MarketTrendsResult {
     isFallback: boolean;
 }
 
+interface CompareCardProps {
+    pkgKey: string;
+    pkg: {
+        title: string;
+        totalSpent: number;
+        extraCosts: { name: string; amount: number }[];
+    };
+    location: string;
+    isWinner: boolean;
+}
+
+function CompareCard({ pkgKey, pkg, location, isWinner }: CompareCardProps) {
+    const chartRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!chartRef) return;
+
+        const myChart = echarts.init(chartRef.current);
+
+        const chartData = pkg.extraCosts.map(item => ({
+            values: item.amount,
+            name: item.name
+        }));
+
+        const option: echarts.EChartsOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c}만 원 ({d}%)',
+            },
+            legent: {
+                bottom: '0%',
+                left: 'center',
+                textStyle: { fontSize: 11 },
+            },
+            series: [
+                {
+                    name: pkg.title,
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 8,
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                    },
+                    label: { show: false },
+                    data: chartData,
+                },
+            ]
+        };
+
+        console.log(chartData)
+
+        myChart.setOption(option);
+
+        const handleResize = () => myChart.resize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            myChart.dispose();
+        };
+    }, [pkg]);
+
+    return (
+        <div className={`gless-card w-full relative ${isWinner ? 'border-solid border-[.2rem] border-emerald-500 shadow-emerald-300' : ''}`}>
+            {isWinner && (
+                <div className="text-center rounded-[50%] w-[4.8rem] h-[4.8rem] flex flex-col items-center justify-center border-solid border-emerald-500 border-[.1rem] text-emerald-500 font-semibold absolute top-[2rem] right-[2rem]">
+                    <ThumbsUp className="w-[1.6rem] h-[1.6rem] mx-auto mb-[.2rem]" />
+                    <span className="text-[.8rem]">알뜰 추천</span>
+                </div>
+            )}
+            <p className="text-[1.6rem] font-semibold mb-[1rem]">
+                {location} 지역 <span className="text-rose-400">{pkg.title}</span> 결과
+            </p>
+
+            <ul className="space-y-[.1rem] text-[1.2rem] mb-[1rem]">
+                {pkg.extraCosts.map((item) => (
+                    <li key={item.name}>
+                        {item.name} : {item.amount}만 원
+                    </li>
+                ))}
+            </ul>
+
+            <div ref={chartRef} className="w-full h-[220px] my-[1rem]" />
+
+            <p className="text-[1.4rem] font-bold mt-[1rem]">
+                총 합계: <span className="text-rose-500">{pkg.totalSpent}만 원</span>
+            </p>
+        </div>
+    );
+
+}
+
 export default function Compare() {
+
     const { location, budgetTier, weddingDate, guestCount, budgetItems } = useDooriStore();
     const { isLoading, setLoading } = useUiStore();
     const curYear = new Date().toISOString().split('T')[0].split('-')[0];
@@ -71,7 +167,7 @@ export default function Compare() {
         } finally {
             setLoading(false);
         }
-    }
+    }     
 
     // console.log(trendsresult)
     console.log(reportResult)
@@ -172,25 +268,7 @@ export default function Compare() {
                                 (key === "recommendedPackage" && isRecommendCheaper);
 
                             return (
-                                <div className={`gless-card w-full relative ${isWinner && 'border-solid border-[.2rem] border-emerald-500 shadow-emerald-300'}`} key={key}>
-                                    { isWinner && (
-                                        <div className="text-center rounded-[50%] w-[4.8rem] h-[4.8rem] flex flex-col items-center justify-center border-solid border-emerald-500 border-[.1rem] text-emerald-500 font-semibold absolute top-[2rem] right-[2rem]">
-                                            <ThumbsUp className="w-[1.6rem] h-[1.6rem] mx-auto mb-[.2rem]" />
-                                            <span className="text-[.8rem]">알뜰 추천</span>
-                                        </div>
-                                    )}
-                                    <p className="text-[1.6rem] font-semibold mb-[1rem]">{reportResult.location} 지역 <span className="text-rose-400">{pkg.title}</span> 결과</p>
-
-                                    <ul className="space-y-[.1rem] text-[1.2rem]">
-                                        {pkg.extraCosts.map(item => {
-                                            return (
-                                                <li>{item.name} : {item.amount}만 원</li>
-                                            )
-                                        })}
-                                    </ul>
-
-                                    <p className="text-[1.4rem] font-bold mt-[2rem]">총 합계: <span className="text-rose-500">{pkg.totalSpent}만 원</span></p>
-                                </div>
+                                <CompareCard key={key} pkgKey={key} pkg={pkg} location={location} isWinner={isWinner} />
                             )
                         }) 
                     )}
