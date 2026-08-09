@@ -4,6 +4,22 @@ import { NextResponse } from "next/server";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
+// 웨딩 시세 5개 고정 카테고리 ↔ market-trends 분기 데이터 필드 매핑
+const CATEGORY_FIELD_MAP: { category: string; metroKey: string; localKey: string }[] = [
+    { category: "웨딩홀/식대", metroKey: "metroHall", localKey: "localHall" },
+    { category: "스드메", metroKey: "metroSdm", localKey: "localSdm" },
+    { category: "예물/반지", metroKey: "metroJewelry", localKey: "localJewelry" },
+    { category: "신혼여행", metroKey: "metroHoneymoon", localKey: "localHoneymoon" },
+    { category: "기타", metroKey: "metroEtc", localKey: "localEtc" },
+];
+
+// "1,500만 ~ 2,500만 원" 같은 범위 텍스트를 평균값(만 원 단위)으로 변환
+function parseRangeAverage(rangeText?: string): number {
+    const numbers = rangeText?.replace(/,/g, "").match(/\d+/g)?.map(Number) ?? [];
+    if (numbers.length === 0) return 0;
+    return Math.round(numbers.reduce((sum, n) => sum + n, 0) / numbers.length);
+}
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
@@ -28,6 +44,35 @@ export async function POST(request: Request) {
 
         // 수도권 여부 확인
         const isMetro = location.includes("서울") || location.includes("경기") || location.includes("인천");
+
+        // 유저 실제 계약 견적 (미입력 카테고리는 0원)
+        const userExtraCosts = CATEGORY_FIELD_MAP.map(({ category }) => {
+            const matched = contractInputs.find(input => input.category === category);
+            return { name: category, amount: matched?.contractAmount ?? 0 };
+        });
+        const userTotalSpent = userExtraCosts.reduce((sum, item) => sum + item.amount, 0);
+
+        // 해당 분기 · 지역 시장 표준 견적 (시세 범위의 평균값)
+        const recommendedExtraCosts = CATEGORY_FIELD_MAP.map(({ category, metroKey, localKey }) => {
+            const rangeText = activeQuarter?.[isMetro ? metroKey : localKey];
+            return { name: category, amount: parseRangeAverage(rangeText) };
+        });
+        const recommendedTotalSpent = recommendedExtraCosts.reduce((sum, item) => sum + item.amount, 0);
+
+        const packageComparison: Budget.ComparisonReport["packageComparison"] = {
+            userPackage: {
+                title: `${activeQuarter?.quarter ?? `${quarterIndex + 1}분기`} 내 견적`,
+                baseAmount: 0,
+                extraCosts: userExtraCosts,
+                totalSpent: userTotalSpent,
+            },
+            recommendedPackage: {
+                title: `${activeQuarter?.quarter ?? `${quarterIndex + 1}분기`} 시장 표준 견적`,
+                baseAmount: 0,
+                extraCosts: recommendedExtraCosts,
+                totalSpent: recommendedTotalSpent,
+            },
+        };
 
         // 시세 범위
         const targetHallRange = activeQuarter
@@ -60,39 +105,21 @@ export async function POST(request: Request) {
             - **웨딩홀 (${parsedGuestCount}명 기준 시장가 범위):** ${targetHallRange} (시즌 특성: ${activeQuarter?.season || "성수기/비수기 반영"})
             - **스드메 (패키지 기준 시장가 범위):** ${targetSdmRange}
             
-            [수치 계산 공식]
-            - userTotalSpent = 유저가 실제 입력한 항목들의 총합 (만 원)
-            - marketAverageTotal = 유저가 입력한 항목과 동일한 카테고리의 **위 실시간 시장 시세 기준 평균가 총합** (만 원)
-            - savedAmount = marketAverageTotal - userTotalSpent
-            - savedPercent = Math.round((savedAmount / marketAverageTotal) * 100)
-            
+            [★ 서버에서 이미 확정 계산한 수치 (그대로 사용할 것, 재계산 금지) ★]
+            - userTotalSpent = ${userTotalSpent} (만 원)
+            - marketAverageTotal = ${recommendedTotalSpent} (만 원)
+            - savedAmount = marketAverageTotal - userTotalSpent = ${recommendedTotalSpent - userTotalSpent} (만 원)
+            - savedPercent = ${recommendedTotalSpent > 0 ? Math.round(((recommendedTotalSpent - userTotalSpent) / recommendedTotalSpent) * 100) : 0} (%)
+
             [JSON 응답 포맷]
             {
                 "location": "${location}",
                 "weddingMonth": ${parsedMonth},
-                "userTotalSpent": 숫자(만원단위),
-                "marketAverageTotal": 숫자(만원단위),
-                "savedAmount": 숫자(만원단위),
-                "savedPercent": 숫자(백분율),
+                "userTotalSpent": ${userTotalSpent},
+                "marketAverageTotal": ${recommendedTotalSpent},
+                "savedAmount": ${recommendedTotalSpent - userTotalSpent},
+                "savedPercent": ${recommendedTotalSpent > 0 ? Math.round(((recommendedTotalSpent - userTotalSpent) / recommendedTotalSpent) * 100) : 0},
                 "evaluationBadge": "최저 (아주 잘함)" | "적정 (평균)" | "주의 (초과)",
-                "packageComparison": {
-                "userPackage": {
-                    "title": "유저 선택 계약 조합",
-                    "baseAmount": 숫자,
-                    "extraCosts": [
-                    { "name": "항목명", "amount": 숫자 }
-                    ],
-                    "totalSpent": 숫자
-                },
-                "recommendedPackage": {
-                    "title": "시장 표준 추천 조합",
-                    "baseAmount": 숫자,
-                    "extraCosts": [
-                    { "name": "항목명", "amount": 숫자 }
-                    ],
-                    "totalSpent": 숫자
-                }
-                },
                 "itemAnalyses": [
                 {
                     "category": "카테고리명",
@@ -134,6 +161,10 @@ export async function POST(request: Request) {
         // 혹시 모를 마크다운 래핑 제거 후 파싱 (안전 장치)
         const cleanedText = response.text.replace(/```json|```/g, "").trim();
         const reportData: Budget.ComparisonReport = JSON.parse(cleanedText);
+
+        // packageComparison은 AI가 아닌 서버에서 계산한 값으로 항상 덮어써서
+        // 유저 미입력 시 0원, 시장 표준은 실제 시세 평균이 정확히 반영되도록 함
+        reportData.packageComparison = packageComparison;
 
         return NextResponse.json(reportData);
 
