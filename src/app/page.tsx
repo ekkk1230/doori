@@ -26,15 +26,14 @@ export default function Home() {
 				{!showSplash && (
 					<>
 						{!isOnboarded ? (
-						/* 아직 온보딩 전이라면 */
-						<Onboarding />
+							/* 아직 온보딩 전이라면 */
+							<Onboarding />
 						) : (
-						/* 온보딩 완료 시 메인 플랜 탭 노출 */
-						<Plan />
+							/* 온보딩 완료 시 메인 플랜 탭 노출 */
+							<Plan />
 						)}
 					</>
 				)}
-				{/* <Timeline /> */}
 			</>
 		);
 }

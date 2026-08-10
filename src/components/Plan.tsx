@@ -78,7 +78,7 @@ export default function PlanTab() {
                     <Link href="#" className="link-box bg4">
                         <span className="text-[3rem]">📍</span>
                         <div className="relative w-full">
-                            <p className="sm-tit">지역 업체</p>
+                            <p className="sm-tit">주변 업체</p>
                             <p className="item-count tit">{location}</p>
                             <p className="sm-tit">업체 둘러보기</p>
                             <ChevronRight className="absolute top-[50%] right-0 translate-y-[-50%]" />
@@ -137,7 +137,7 @@ export default function PlanTab() {
                                 <li key={item.id} className={`flex text-[1.6rem] p-[1rem_1.2rem] rounded-[1.2rem] ${isOverdue ? 'bg-gray-100' : 'bg-gray-200/20'}`}>
                                     <p className={`tit mr-[1rem] w-[6rem] font-semibold ${isOverdue ? 'text-gray-400' : 'text-rose-700'}`}>{dDayText}</p>
                                     <p className={`font-bold ${isOverdue ? 'text-gray-500' : 'text-rose-950'}`}>{item.title}</p>
-                                    {item.isEssential && <p className={`ml-auto text-[1.2rem] font-semibold p-[.6rem_1.8rem] rounded-[80rem] ${isOverdue ? 'bg-gray-200 text-gray-600' : 'bg-amber-200/50 text-rose-950'}`}>"필수"</p>}
+                                    {item.isEssential && <p className={`ml-auto text-[1.2rem] font-semibold p-[.6rem_1.8rem] rounded-[80rem] ${isOverdue ? 'bg-gray-200 text-gray-600' : 'bg-amber-200/50 text-rose-950'}`}>필수</p>}
                                 </li>
                             )
                         })}

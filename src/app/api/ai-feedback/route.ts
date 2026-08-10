@@ -15,8 +15,12 @@ export async function POST(request: Request) {
             uncompletedTaskTitles = [],  // 남아있는 Task 제목 목록 (또는 미완료 필수 항목)
         } = body;
 
-        // 남은 잔액
-        const remainingBudget = totalBudget ? totalBudget - usedBudgetInManwon : null;
+        const usedInManwon = Number(usedBudgetInManwon) || 0;   
+        
+        // 2. 남은 예산 정상 계산
+        const remainingBudget = totalBudget - usedInManwon;
+
+        // console.log(totalBudget, usedBudgetInManwon, remainingBudget)
 
         const prompt = `
             너는 웨딩 플래너 AI '두리(DOORI)'야. 

@@ -23,7 +23,7 @@ export default function Timeline() {
     // console.log(totalBudget)
 
     const calcBudget = calculateBudgetSummary();
-    const diffBudget = calcBudget.diffBudget;
+    const totalSpent = calcBudget.totalSpent;
 
     const { diffDays, dDayText, periodMonths } = calculateWeddingPeriod(weddingDate);
     const currentDDay = parseDDay(dDayText);
@@ -56,7 +56,7 @@ export default function Timeline() {
                 body: JSON.stringify({
                     periodMonths,
                     totalBudget: numericTotalBudget,
-                    usedBudgetInManwon: diffBudget,
+                    usedBudgetInManwon: totalSpent,
                     progressPercent,
                     completedTaskTitles,
                     uncompletedTaskTitles,

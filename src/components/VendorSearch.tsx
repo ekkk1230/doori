@@ -189,6 +189,8 @@ export default function VendorSearch() {
                     <h2 className="text-[1.8rem] font-bold text-slate-800">
                         {searchLocation || "지역 선택 필요"}
                     </h2>
+
+                    <span className="text-[#777]">선택한 지역 주변의 웨딩 관련 업체를 찾아 볼 수 있습니다.</span>
                 </div>
 
                 <form onSubmit={handleLocationSubmit} className="flex gap-2 mt-[1rem] block w-full">
