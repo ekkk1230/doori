@@ -1,3 +1,4 @@
+import VendorSearch from '@/components/VendorSearch';
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: "doori | 업체",
@@ -6,6 +7,6 @@ export const metadata: Metadata = {
 
 export default function VendorsPage() {
     return (
-        <div>page</div>
+        <VendorSearch />
     )
 }

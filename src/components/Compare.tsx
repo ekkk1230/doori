@@ -3,7 +3,7 @@
 import { useDooriStore } from "@/store/useDooriStore";
 import { useUiStore } from "@/store/useUiStore";
 import { Budget } from "@/types/doori";
-import { Camera, ThumbsUp } from "lucide-react";
+import { Camera, Check, ThumbsUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import * as echarts from "echarts";
 
@@ -57,8 +57,7 @@ const CATEGORY_COLORS = [
 
 function CompareCard({ pkgKey, pkg, location, isWinner }: CompareCardProps) {
     const chartRef = useRef<HTMLDivElement>(null);
-
-    // 5대 고정 카테고리와 금액/색상을 1:1 매핑
+    
     const normalizedExtraCosts = FIXED_CATEGORIES.map((catName, idx) => {
         const found = pkg?.extraCosts?.find(
             item => item.name.includes(catName.split("/")[0]) || catName.includes(item.name)
@@ -210,7 +209,9 @@ export default function Compare() {
         }
     };
 
-    console.log(reportResult)
+    const badgeClass = reportResult?.evaluationBadge.includes('최저') ? 'bg-blue-50 text-blue-700' : reportResult?.evaluationBadge.includes('적정') ? 'bg-green-50 text-green-500' : 'bg-red-50 text-red-700'
+
+    // console.log(reportResult)
 
     return (
         <div className="container">
@@ -328,34 +329,57 @@ export default function Compare() {
                     }
                 </div>
 
-                <ul>
-                    {reportResult?.itemAnalyses.map(item => {
-                        const saveAmount = item.targetAmount > item.actualAmount ? item.diffAmount + '절약' : item.targetAmount < item.actualAmount ? item.diffAmount + '초과' : '적정한 평균가입니다!';
-                    
-                        return (
-                            <li key={item.category}>
-                                {item.category}
-                                {saveAmount}
-                                {item.aiTip}
-                            </li>
-                    )})}
-                </ul>
+                {
+                    reportResult && (
+                        <>
+                            <div className="gless-card my-[2rem]">
+                                <p className="tit text-[1.6rem] mb-[1rem]">상세 분석 내용</p>
 
-                <ul>
-                    {reportResult?.contractChecklist.map((checkItem, idx) => {
-                        return (
-                            <li key={idx}>{checkItem}</li>
-                        )
-                    })}
-                </ul>
+                                <ul className="space-y-[1rem]">
+                                    {reportResult?.itemAnalyses.map(item => {
+                                        const spanStyle = `bloc p-[.4rem_1.2rem] rounded-[1.2rem]`;
+                                        const saveAmount = item.targetAmount > item.actualAmount ? <span className={`text-blue-700 bg-blue-50 ${spanStyle}`}>{(item.diffAmount).toLocaleString() + '만 원 절약'}</span> : item.targetAmount < item.actualAmount ? <span className={`text-red-700 bg-red-50 ${spanStyle}`}>{(item.diffAmount).toLocaleString() + '만 원 초과'}</span> : <span className={`text-green-700 bg-green-50 ${spanStyle}`}>적정한 평균가입니다!</span>;
+                                    
+                                        return (
+                                            <li key={item.category}
+                                                className="text-[1.4rem] gap-[1rem] flex items-center before:content-['-'] before:mx-[.4rem]"
+                                            >
+                                                <span className={`${spanStyle} text-rose-700 bg-rose-50`}>{item.category}</span>
+                                                {saveAmount}
+                                                {item.aiTip}
+                                            </li>
+                                    )})}
+                                </ul>
+                            </div>
 
-                <div className="gless-card">
-                    <p className="tit">총평</p>
+                            <div className="gless-card my-[2rem]">
+                                <p className="tit text-[1.6rem] mb-[1rem]">점검사항</p>
 
-                    <div>{reportResult?.evaluationBadge}</div>
+                                <ul className="space-y-[1rem]">
+                                    {reportResult?.contractChecklist.map((checkItem, idx) => {
+                                        return (
+                                            <li 
+                                                key={idx}
+                                                className="flex gap-[.8rem] items-center text-[1.4rem]"
+                                            >   
+                                                <div className="rounded-[.4rem] bg-emerald-100 flex items-center justify-center p-[.4rem]"><Check className="w-[1.4rem] h-[1.4rem]"/></div>
+                                                {checkItem}
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
 
-                    <p>{reportResult?.overallDiagnosis}</p>
-                </div>
+                            <div className="gless-card">
+                                <p className="tit text-[1.6rem] mb-[1rem]">총평</p>
+
+                                <div className={`inline-block p-[.4rem_1.2rem] rounded-[1.2rem] mb-[1rem] font-semibold text-[1.2rem] ${badgeClass}`}>{reportResult?.evaluationBadge}</div>
+
+                                <p className="text-[1.4rem] leading-relaxed text-[#555]">{reportResult?.overallDiagnosis}</p>
+                            </div>
+                        </>
+                    )
+                }
             </div>
         </div>
     );

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import "./globals.css";
 import ClientLayoutShell from "@/components/ClientLayoutShell";
 import ModalLayer from '@/components/modal/ModalLayer';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
 	title: "doori | AI 웨딩 플래너",
@@ -13,8 +14,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+	const KAKAO_KEY = process.env.KAKAO_JAVASCRIPT_KEY;
 	return (
 		<html lang="ko">
+			<head>
+				<Script 
+					src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_KEY}&libraries=services&autoload=false`}
+					strategy="beforeInteractive"
+				/>
+			</head>
 			<body className="relative min-h-screen bg-rose-50/30 overflow-x-hidden antialiased">
 				<div
 					className="pointer-events-none fixed inset-0 overflow-hidden z-0"
