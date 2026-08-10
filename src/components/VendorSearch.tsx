@@ -191,17 +191,17 @@ export default function VendorSearch() {
                     </h2>
                 </div>
 
-                <form onSubmit={handleLocationSubmit} className="flex gap-2">
+                <form onSubmit={handleLocationSubmit} className="flex gap-2 mt-[1rem] block w-full">
                     <input
                         type="text"
                         value={inputLocation}
                         onChange={(e) => setInputLocation(e.target.value)}
                         placeholder="예: 서울 강남, 서울 종로"
-                        className="px-4 py-2 border border-slate-200 rounded-xl text-[1.2rem] focus:outline-none focus:border-rose-400 w-48 md:w-56"
+                        className="px-4 py-2 block w-full border border-slate-200 rounded-xl text-[1.2rem] focus:outline-none focus:border-rose-400 w-48 md:w-56"
                     />
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-slate-800 text-white text-[1.2rem] font-semibold rounded-xl hover:bg-slate-700 transition"
+                        className="px-4 py-2 whitespace-nowrap bg-slate-800 text-white text-[1.2rem] font-semibold rounded-xl hover:bg-slate-700 transition"
                     >
                         지역 변경
                     </button>
@@ -209,7 +209,7 @@ export default function VendorSearch() {
                         <button
                             type="button"
                             onClick={handleResetLocation}
-                            className="px-3 py-2 bg-slate-100 text-slate-600 text-[1.1rem] font-medium rounded-xl hover:bg-slate-200 transition shrink-0"
+                            className="px-3 py-2 whitespace-nowrap bg-slate-100 text-slate-600 text-[1.1rem] font-medium rounded-xl hover:bg-slate-200 transition shrink-0"
                         >
                             원래대로
                         </button>
@@ -283,10 +283,10 @@ export default function VendorSearch() {
 
                             <div className="mt-4 pt-3 border-t border-slate-50 flex justify-end">
                                 <a
-                                href={place.place_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="px-4 py-2 bg-slate-100 text-slate-700 text-[1.2rem] font-semibold rounded-lg hover:bg-slate-200 transition"
+                                    href={place.place_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="px-4 py-2 bg-slate-100 text-slate-700 text-[1.2rem] font-semibold rounded-lg hover:bg-slate-200 transition"
                                 >
                                     카카오 지도로 열기
                                 </a>
